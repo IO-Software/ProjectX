@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication2
+﻿namespace ProjectX
 {
     partial class Form1
     {
