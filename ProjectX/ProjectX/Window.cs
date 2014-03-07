@@ -22,6 +22,7 @@ namespace ProjectX
         private float maxScreenHeight;
         private FilterInfoCollection videoDevices;
         private VideoCaptureDevice videoSource;
+        private int i = 0;
         
         public Window()
         {

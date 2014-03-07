@@ -70,6 +70,9 @@
             this.pBoxUp.Size = new System.Drawing.Size((int)(screenWidth/2), (int)((screenHeight * 0.90)/2));
             this.pBoxUp.TabIndex = 2;
             this.pBoxUp.TabStop = false;
+            // Zorgt er voor dat het inkomende beeld automatisch wordt geschaald
+            // Met de picturebox
+            this.pBoxUp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 
             // 
             // pBoxDown
@@ -81,6 +84,7 @@
             this.pBoxDown.Size = new System.Drawing.Size((int)(screenWidth/2), (int)((screenHeight * 0.90) / 2));
             this.pBoxDown.TabIndex = 3;
             this.pBoxDown.TabStop = false;
+            this.pBoxDown.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 
             // 
             // cBoxCam
