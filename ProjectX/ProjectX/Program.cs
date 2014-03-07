@@ -16,7 +16,9 @@ namespace ProjectX
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Window mainWindow = new Window();
+            Application.Run(mainWindow);
+            
         }
     }
 }
