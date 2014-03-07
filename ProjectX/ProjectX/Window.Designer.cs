@@ -67,7 +67,7 @@
             this.pBoxUp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pBoxUp.Name = "pBoxUp";
             this.pBoxUp.BackColor = System.Drawing.SystemColors.Control;
-            this.pBoxUp.Size = new System.Drawing.Size((int)(screenWidth/2), (int)((screenHeight * 0.90)/2));
+            this.pBoxUp.Size = new System.Drawing.Size((int)(screenWidth / 2), (int)((screenHeight * 0.90) / 2));
             this.pBoxUp.TabIndex = 2;
             this.pBoxUp.TabStop = false;
             // Zorgt er voor dat het inkomende beeld automatisch wordt geschaald
@@ -81,7 +81,7 @@
             this.pBoxDown.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pBoxDown.Name = "pBoxDown";
             this.pBoxDown.BackColor = System.Drawing.SystemColors.Control;
-            this.pBoxDown.Size = new System.Drawing.Size((int)(screenWidth/2), (int)((screenHeight * 0.90) / 2));
+            this.pBoxDown.Size = new System.Drawing.Size((int)(screenWidth / 2), (int)((screenHeight * 0.90) / 2));
             this.pBoxDown.TabIndex = 3;
             this.pBoxDown.TabStop = false;
             this.pBoxDown.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;

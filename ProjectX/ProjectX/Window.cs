@@ -54,8 +54,11 @@ namespace ProjectX
                 cBoxCam.Items.Add(Device.Name);
             }
             cBoxCam.SelectedIndex = 0;
-            
             videoSource = new VideoCaptureDevice();
+            // Wil eigenlijk apart webcam class invoegen. Zal er later naar kijken. Kan je nu negeren
+            //webcamOriginal = new Webcam();
+            //webcamTrial = new Webcam();
+            
         }
 
         private void btnOnOff_Click(object sender, EventArgs e) 
@@ -87,7 +90,8 @@ namespace ProjectX
             Bitmap original = (Bitmap)eventArgs.Frame.Clone();
             Bitmap trial = (Bitmap)eventArgs.Frame.Clone();
             pBoxUp.Image = original; 
-            trial = cardRecognition(trial);
+            trial = otsuConverter(trial);
+            blobRecognition(trial);
             pBoxDown.Image = trial;
         }
 
@@ -99,9 +103,20 @@ namespace ProjectX
             }
         }
 
-        private Bitmap cardRecognition (Bitmap camImage) {
+        private Bitmap otsuConverter(Bitmap camImage)
+        {
             camImage = otsu.Apply(camImage);
             return camImage;
+        }
+
+        private Bitmap blobRecognition(Bitmap camImage)
+        {
+            return null;
+        }
+
+        private void Window_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

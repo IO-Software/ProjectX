@@ -8,5 +8,9 @@ namespace ProjectX
 {
     class Webcam
     {
+        public Webcam()
+        {
+
+        }
     }
 }
