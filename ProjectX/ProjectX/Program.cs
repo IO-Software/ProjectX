@@ -16,7 +16,8 @@ namespace ProjectX
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Driver mainDriver = new Driver();
+            Window mainWindow = new Window();
+            Application.Run(mainWindow);
         }
 
     }

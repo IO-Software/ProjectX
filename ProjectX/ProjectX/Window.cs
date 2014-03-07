@@ -21,8 +21,8 @@ namespace ProjectX
         private float maxScreenWidth;
         private float maxScreenHeight;
         private FilterInfoCollection videoDevices;
-        private FiltersSequence otsu;
-        private Webcam webcam;
+        public Webcam webcam;
+        public Filters camFilters;
         
         public Window()
         {
@@ -32,15 +32,12 @@ namespace ProjectX
             InitializeComponent(maxScreenWidth, maxScreenHeight);
             // Initializes the filter for card recognition
             initializeFilters();
+            // Initializes the webcam for card recognition
             initializeWebcams();
         }
 
         private void initializeFilters () {
-            otsu = new FiltersSequence();
-            // Add a grayscale filter to get out all the colors
-            otsu.Add(Grayscale.CommonAlgorithms.BT709);
-            // Converts the image into a binary black and white image with the otsu algorithm
-            otsu.Add(new OtsuThreshold());
+            camFilters = new Filters();
         }
 
         private void initializeWebcams()
@@ -69,7 +66,7 @@ namespace ProjectX
             }
             else 
             {
-                webcam.turnOn();
+                webcam.turnOn(pBoxUp, pBoxDown);
             }
         }
 
@@ -78,23 +75,12 @@ namespace ProjectX
             Application.Exit();
         }
 
-        private void Form_FormClosing(object sender, FormClosingEventArgs e)
+        private void Window_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (webcam.isRunning())
             {
                 webcam.stop();
             }
-        }
-
-        private Bitmap otsuConverter(Bitmap camImage)
-        {
-            camImage = otsu.Apply(camImage);
-            return camImage;
-        }
-
-        private Bitmap blobRecognition(Bitmap camImage)
-        {
-            return null;
         }
     }
 }

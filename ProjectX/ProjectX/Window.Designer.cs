@@ -104,7 +104,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Window_FormClosing);
             this.Controls.Add(this.pBoxDown);
             this.Controls.Add(this.pBoxUp);
             this.Controls.Add(btnOnOff);

@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Driver.cs" />
+    <Compile Include="Filters.cs" />
     <Compile Include="Webcam.cs" />
     <Compile Include="Window.cs">
       <SubType>Form</SubType>

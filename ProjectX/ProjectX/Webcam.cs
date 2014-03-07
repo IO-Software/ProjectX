@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
+using System.Windows.Forms;
 
 using AForge.Video.DirectShow;
 using AForge.Video;
@@ -13,6 +15,8 @@ namespace ProjectX
     {
         private VideoCaptureDevice videoSource;
         private String videoSourceString;
+        private PictureBox pBoxUp;
+        private PictureBox pBoxDown;
 
         public Webcam()
         {
@@ -35,8 +39,10 @@ namespace ProjectX
             videoSource.Stop(); 
         }
 
-        public void turnOn()
+        public void turnOn(PictureBox tempPicBoxUp, PictureBox tempPicBoxDown)
         {
+            pBoxUp = tempPicBoxUp;
+            pBoxDown = tempPicBoxDown;
             videoSource = new VideoCaptureDevice(videoSourceString);
             // De Videokaart
             videoSource.NewFrame += new NewFrameEventHandler(videoSource_NewFrame);
@@ -46,12 +52,11 @@ namespace ProjectX
 
         void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            //Bitmap original = (Bitmap)eventArgs.Frame.Clone();
-            //Bitmap trial = (Bitmap)eventArgs.Frame.Clone();
-            //pBoxUp.Image = original;
-            //trial = otsuConverter(trial);
-            //blobRecognition(trial);
-            //pBoxDown.Image = trial;
+            Bitmap original = (Bitmap)eventArgs.Frame.Clone();
+            Bitmap trial = (Bitmap)eventArgs.Frame.Clone();
+            pBoxUp.Image = original;
+            trial = null;
+            pBoxDown.Image = trial;
         }
     }
 }
