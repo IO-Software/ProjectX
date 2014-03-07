@@ -21,11 +21,8 @@ namespace ProjectX
         private float maxScreenWidth;
         private float maxScreenHeight;
         private FilterInfoCollection videoDevices;
-        private VideoCaptureDevice videoSource;
-        private int i = 0;
         private FiltersSequence otsu;
-        private Webcam webcamOriginal;
-        private Webcam webcamTrial;
+        private Webcam webcam;
         
         public Window()
         {
@@ -35,7 +32,7 @@ namespace ProjectX
             InitializeComponent(maxScreenWidth, maxScreenHeight);
             // Initializes the filter for card recognition
             initializeFilters();
-            loadWebcams();
+            initializeWebcams();
         }
 
         private void initializeFilters () {
@@ -46,7 +43,7 @@ namespace ProjectX
             otsu.Add(new OtsuThreshold());
         }
 
-        private void loadWebcams()
+        private void initializeWebcams()
         {
             videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             foreach (FilterInfo Device in videoDevices)
@@ -54,29 +51,25 @@ namespace ProjectX
                 cBoxCam.Items.Add(Device.Name);
             }
             cBoxCam.SelectedIndex = 0;
-            videoSource = new VideoCaptureDevice();
-            // Wil eigenlijk apart webcam class invoegen. Zal er later naar kijken. Kan je nu negeren
-            //webcamOriginal = new Webcam();
-            //webcamTrial = new Webcam();
-            
+            webcam = new Webcam();
         }
 
         private void btnOnOff_Click(object sender, EventArgs e) 
         {
-            if (videoSource.IsRunning) //Als camera aanstaan
+            webcam.setVideoSource(videoDevices[cBoxCam.SelectedIndex].MonikerString);
+            if (webcam.isRunning())
             {
-                videoSource.Stop(); //Stop streamen
-                pBoxUp.Image = null; //Verwijderd het image uit het geheugen van picturebox
-                pBoxUp.Invalidate(); //Refreshed de picturebox
+                webcam.stop();
+                // Erase the last image from the memory of the picturebox
+                pBoxUp.Image = null;
                 pBoxDown.Image = null;
+                // Refresh the picturebox
+                pBoxUp.Invalidate();
                 pBoxDown.Invalidate();
             }
-            else //Als de camera nog niet aan staat
+            else 
             {
-                videoSource = new VideoCaptureDevice(videoDevices[cBoxCam.SelectedIndex].MonikerString);
-                // De Videokaart
-                videoSource.NewFrame += new NewFrameEventHandler(videoSource_NewFrame);
-                videoSource.Start();
+                webcam.turnOn();
             }
         }
 
@@ -85,21 +78,11 @@ namespace ProjectX
             Application.Exit();
         }
 
-        void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
-        {
-            Bitmap original = (Bitmap)eventArgs.Frame.Clone();
-            Bitmap trial = (Bitmap)eventArgs.Frame.Clone();
-            pBoxUp.Image = original; 
-            trial = otsuConverter(trial);
-            blobRecognition(trial);
-            pBoxDown.Image = trial;
-        }
-
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (videoSource.IsRunning)
+            if (webcam.isRunning())
             {
-                videoSource.Stop();
+                webcam.stop();
             }
         }
 
@@ -112,11 +95,6 @@ namespace ProjectX
         private Bitmap blobRecognition(Bitmap camImage)
         {
             return null;
-        }
-
-        private void Window_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

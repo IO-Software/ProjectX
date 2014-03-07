@@ -118,8 +118,8 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pBoxUp;
-        private System.Windows.Forms.PictureBox pBoxDown;
+        public System.Windows.Forms.PictureBox pBoxUp;
+        public System.Windows.Forms.PictureBox pBoxDown;
         private System.Windows.Forms.Button btnQuit;
         private System.Windows.Forms.Button btnOnOff;
         private System.Windows.Forms.ComboBox cBoxCam;
