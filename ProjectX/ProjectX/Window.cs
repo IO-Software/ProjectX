@@ -23,6 +23,9 @@ namespace ProjectX
         private FilterInfoCollection videoDevices;
         private VideoCaptureDevice videoSource;
         private int i = 0;
+        private FiltersSequence otsu;
+        private Webcam webcamOriginal;
+        private Webcam webcamTrial;
         
         public Window()
         {
@@ -30,7 +33,17 @@ namespace ProjectX
             maxScreenWidth = Screen.PrimaryScreen.Bounds.Width;
             
             InitializeComponent(maxScreenWidth, maxScreenHeight);
+            // Initializes the filter for card recognition
+            initializeFilters();
             loadWebcams();
+        }
+
+        private void initializeFilters () {
+            otsu = new FiltersSequence();
+            // Add a grayscale filter to get out all the colors
+            otsu.Add(Grayscale.CommonAlgorithms.BT709);
+            // Converts the image into a binary black and white image with the otsu algorithm
+            otsu.Add(new OtsuThreshold());
         }
 
         private void loadWebcams()
@@ -41,6 +54,7 @@ namespace ProjectX
                 cBoxCam.Items.Add(Device.Name);
             }
             cBoxCam.SelectedIndex = 0;
+            
             videoSource = new VideoCaptureDevice();
         }
 
@@ -70,10 +84,11 @@ namespace ProjectX
 
         void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            Bitmap image = (Bitmap)eventArgs.Frame.Clone();
-            Bitmap image2 = (Bitmap)eventArgs.Frame.Clone();
-            pBoxDown.Image = image2;
-            pBoxUp.Image = image;
+            Bitmap original = (Bitmap)eventArgs.Frame.Clone();
+            Bitmap trial = (Bitmap)eventArgs.Frame.Clone();
+            pBoxUp.Image = original; 
+            trial = cardRecognition(trial);
+            pBoxDown.Image = trial;
         }
 
         private void Form_FormClosing(object sender, FormClosingEventArgs e)
@@ -82,6 +97,11 @@ namespace ProjectX
             {
                 videoSource.Stop();
             }
+        }
+
+        private Bitmap cardRecognition (Bitmap camImage) {
+            camImage = otsu.Apply(camImage);
+            return camImage;
         }
     }
 }
