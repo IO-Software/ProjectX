@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using System.Drawing;
 
 using AForge.Imaging;
+using AForge;
 using AForge.Math;
+using AForge.Math.Geometry;
 
 
 namespace ProjectX
@@ -14,6 +16,7 @@ namespace ProjectX
     public class BlobExtractor
     {
         BlobCounter extractor;
+        private Pen pen = new Pen(Color.Red, 2);
 
         public BlobExtractor ()
         {
@@ -38,13 +41,24 @@ namespace ProjectX
             extractor.MaxWidth = extractor.MaxHeight = maximum;
         }
 
-        public List<IntPoints> extractBlobs (Bitmap image) 
+        public Bitmap extractBlobs (Bitmap image) 
         {
             extractor.ProcessImage(image);
             foreach (Blob blob in extractor.GetObjectsInformation())
             {
+                List<IntPoint> edgePoints = extractor.GetBlobsEdgePoints(blob);
+                List<IntPoint> corners = PointsCloud.FindQuadrilateralCorners(edgePoints);
 
+                using (var draw = Graphics.FromImage(image))
+                {
+                    if (corners.Count = 4)
+                    {
+                        for 
+                    }
+                }
+                
             }
+
         }
     }
 }

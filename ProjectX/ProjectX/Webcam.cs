@@ -18,7 +18,7 @@ namespace ProjectX
         private Filters camFilter;
         private BlobExtractor blobExtractor;
         private PictureBox pBoxOriginal;
-        private PictureBox pBoxTrial;
+        private PictureBox pBoxAltered;
         private Boolean extractorOn;
 
         /// <summary>
@@ -28,10 +28,10 @@ namespace ProjectX
         /// This picturebox will show the original webcamfeed
         /// <param name="pBoxTr"></param>
         /// This picturebox will show the altered webcamfeed
-        public Webcam(PictureBox pBoxOr, PictureBox pBoxTr)
+        public Webcam(PictureBox pBoxOriginal, PictureBox pBoxAltered)
         {
-            this.pBoxOriginal = pBoxOr;
-            this.pBoxTrial = pBoxTr;
+            this.pBoxOriginal = pBoxAltered;
+            this.pBoxAltered = pBoxAltered;
             videoSource = new VideoCaptureDevice();
             iniFilters();
             iniExtractor();
@@ -81,9 +81,9 @@ namespace ProjectX
         public void clearPictureBoxes()
         {
             pBoxOriginal.Image = null;
-            pBoxTrial.Image = null;
+            pBoxAltered.Image = null;
             pBoxOriginal.Invalidate();
-            pBoxTrial.Invalidate();
+            pBoxAltered.Invalidate();
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace ProjectX
                 trial = camFilter.applyFilter(trial);
             }
             pBoxOriginal.Image = original;
-            pBoxTrial.Image = trial;
+            pBoxAltered.Image = trial;
         }
 
         private void setGrayFilter(Boolean status)
