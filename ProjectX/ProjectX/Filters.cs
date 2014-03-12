@@ -18,6 +18,8 @@ namespace ProjectX
         private FiltersSequence grayFilter;
         private FiltersSequence otsuFilter;
 
+        private Boolean otsuOn;
+
         public Filters()
         {
             iniGrayFilter();
@@ -58,7 +60,7 @@ namespace ProjectX
             {
                 filter = null;
             }
-            else
+            else if (status & !otsuOn)
             {
                 filter = grayFilter;
             }
@@ -73,10 +75,12 @@ namespace ProjectX
             if (!status)
             {
                 filter = null;
+                otsuOn = false;
             }
             else
             {
                 filter = otsuFilter;
+                otsuOn = true;
             }
         }
 

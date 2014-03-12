@@ -15,8 +15,7 @@ namespace ProjectX
 {
     public class BlobExtractor
     {
-        BlobCounter extractor;
-        private Pen pen = new Pen(Color.Red, 2);
+        private BlobCounter extractor;
 
         public BlobExtractor ()
         {
@@ -41,6 +40,10 @@ namespace ProjectX
             extractor.MaxWidth = extractor.MaxHeight = maximum;
         }
 
+        // DEZE KLASSE MOET ALLEEN EEN INTPOINT LIJST TERUG STUREN. ZO KAN ER GETEKEND WORDEN OP HET PLAATJE
+        // IN DE WEBCAMCLASS EN ZO KAN HET ORGINELE BEELD BEHOUDEN BLIJVEN.
+        // ER MOET ECHTER NOG WEL WAT WORDEN GEVONDEN WORDEN VOOR DE FOREACH BLOB. DIT GAAT NATUURLIJK NIET 
+        // GOED WANNEER IK DIT TERUGGEEF --> EEN LIJST MET 4 x INTPOINT? (GAAT DIT NIET HAKKEN IN DE SNELHEID?)
         public Bitmap extractBlobs (Bitmap image) 
         {
             extractor.ProcessImage(image);
@@ -48,17 +51,8 @@ namespace ProjectX
             {
                 List<IntPoint> edgePoints = extractor.GetBlobsEdgePoints(blob);
                 List<IntPoint> corners = PointsCloud.FindQuadrilateralCorners(edgePoints);
-
-                using (var draw = Graphics.FromImage(image))
-                {
-                    if (corners.Count == 4)
-                    {
-                         
-                    }
-                }
-                
             }
-            return null;
+            return image;
         }
     }
 }

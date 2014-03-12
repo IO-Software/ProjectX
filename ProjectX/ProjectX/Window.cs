@@ -23,6 +23,7 @@ namespace ProjectX
         private float maxScreenHeight;
         private FilterInfoCollection videoDevices;
         private Webcam webcam;
+        private Filters camFilter;
 
         /// <summary>
         /// The class window provides the interface of the program. This class also initializes the webcam for the pictureboxes. 
@@ -34,6 +35,8 @@ namespace ProjectX
             maxScreenWidth = Screen.PrimaryScreen.Bounds.Width;
 
             InitializeComponent();
+            // Initializes the filter for card recognition
+            initializeFilters();
             // Initializes the webcam for card recognition
             initializeWebcams();
         }
@@ -50,7 +53,12 @@ namespace ProjectX
                 cBoxCam.Items.Add(Device.Name);
             }
             cBoxCam.SelectedIndex = 0;
-            webcam = new Webcam(pBoxOriginal, pBoxAltered);
+            webcam = new Webcam(pBoxOriginal, pBoxAltered, camFilter);
+        }
+
+        private void initializeFilters()
+        {
+            camFilter = new Filters();
         }
 
         /// <summary>
@@ -99,21 +107,27 @@ namespace ProjectX
         private void cBoxGreyscale_CheckedChanged(object sender, EventArgs e)
         {
             webcam.setGrayFilter(cBoxGreyscale.Checked);
+            if (cBoxGreyscale.Checked == false)
+            {
+                cBoxOtsu.Checked = false;
+            }
         }
 
         private void cBoxOtsu_CheckedChanged(object sender, EventArgs e)
         {
             webcam.setOtsuFilter(cBoxOtsu.Checked);
+            cBoxGreyscale.Checked = cBoxOtsu.Checked;
         }
 
-        private void cBoxExtractor_CheckedChanged(object sender, EventArgs e)
+        private void cBoxDraw2D_CheckedChanged(object sender, EventArgs e)
         {
-
+            webcam.setDrawing2D(cBoxDraw2D.Checked);
         }
 
-        private void cBoxDraw_CheckedChanged(object sender, EventArgs e)
+        private void cBoxDraw3D_CheckedChanged(object sender, EventArgs e)
         {
-
+            webcam.setDrawing3D(cBoxDraw3D.Checked);
+            cBoxDraw2D.Checked = cBoxDraw3D.Checked;
         }
     }
 }

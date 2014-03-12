@@ -19,7 +19,8 @@ namespace ProjectX
         private BlobExtractor blobExtractor;
         private PictureBox pBoxOriginal;
         private PictureBox pBoxAltered;
-        private Boolean extractorOn;
+        private Boolean draw2D;
+        private Boolean draw3D;
 
         /// <summary>
         /// Creates a new webcam with two pictureboxes where the webcam can show the feed.
@@ -28,18 +29,13 @@ namespace ProjectX
         /// This picturebox will show the original webcamfeed
         /// <param name="pBoxTr"></param>
         /// This picturebox will show the altered webcamfeed
-        public Webcam(PictureBox pBoxOriginal, PictureBox pBoxAltered)
+        public Webcam(PictureBox pBoxOriginal, PictureBox pBoxAltered, Filters camFilter)
         {
             this.pBoxOriginal = pBoxOriginal;
             this.pBoxAltered = pBoxAltered;
+            this.camFilter = camFilter;
             videoSource = new VideoCaptureDevice();
-            iniFilters();
             iniExtractor();
-        }
-
-        private void iniFilters()
-        {
-            camFilter = new Filters();
         }
 
         private void iniExtractor()
@@ -106,9 +102,10 @@ namespace ProjectX
         {
             Bitmap original = (Bitmap)eventArgs.Frame.Clone();
             Bitmap altered = (Bitmap)eventArgs.Frame.Clone();
-            if (camFilter.getFilterStatus() == true)
+            if (camFilter.getFilterStatus())
             {
                 altered = camFilter.applyFilter(altered);
+                blobExtractor.extractBlobs(altered);
             }
             pBoxOriginal.Image = original;
             pBoxAltered.Image = altered;
@@ -138,6 +135,16 @@ namespace ProjectX
             {
                 blobExtractor.setMaximum(maximum);
             }
+        }
+
+        public void setDrawing2D(Boolean status)
+        {
+            draw2D = status;
+        }
+
+        public void setDrawing3D(Boolean status)
+        {
+            draw3D = status;
         }
     }
 }

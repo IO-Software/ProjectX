@@ -37,10 +37,10 @@
             this.cBoxOtsu = new System.Windows.Forms.CheckBox();
             this.tbMinValueEx = new System.Windows.Forms.TrackBar();
             this.tbMaxValueEx = new System.Windows.Forms.TrackBar();
-            this.cBoxExtractor = new System.Windows.Forms.CheckBox();
-            this.cBoxDraw = new System.Windows.Forms.CheckBox();
+            this.cBoxDraw2D = new System.Windows.Forms.CheckBox();
+            this.cBoxDraw3D = new System.Windows.Forms.CheckBox();
             this.cBoxUnknown1 = new System.Windows.Forms.CheckBox();
-            this.cBoxUnknow2 = new System.Windows.Forms.CheckBox();
+            this.cbOriginalImage = new System.Windows.Forms.CheckBox();
             this.lblMaxValueEx = new System.Windows.Forms.Label();
             this.lblMinValueEx = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAltered)).BeginInit();
@@ -133,27 +133,27 @@
             this.tbMaxValueEx.Size = new System.Drawing.Size(212, 45);
             this.tbMaxValueEx.TabIndex = 8;
             // 
-            // cBoxExtractor
+            // cBoxDraw2D
             // 
-            this.cBoxExtractor.AutoSize = true;
-            this.cBoxExtractor.Location = new System.Drawing.Point(611, 265);
-            this.cBoxExtractor.Name = "cBoxExtractor";
-            this.cBoxExtractor.Size = new System.Drawing.Size(68, 17);
-            this.cBoxExtractor.TabIndex = 9;
-            this.cBoxExtractor.Text = "Extractor";
-            this.cBoxExtractor.UseVisualStyleBackColor = true;
-            this.cBoxExtractor.CheckedChanged += new System.EventHandler(this.cBoxExtractor_CheckedChanged);
+            this.cBoxDraw2D.AutoSize = true;
+            this.cBoxDraw2D.Location = new System.Drawing.Point(611, 265);
+            this.cBoxDraw2D.Name = "cBoxDraw2D";
+            this.cBoxDraw2D.Size = new System.Drawing.Size(68, 17);
+            this.cBoxDraw2D.TabIndex = 9;
+            this.cBoxDraw2D.Text = "Draw 2D";
+            this.cBoxDraw2D.UseVisualStyleBackColor = true;
+            this.cBoxDraw2D.CheckedChanged += new System.EventHandler(this.cBoxDraw2D_CheckedChanged);
             // 
-            // cBoxDraw
+            // cBoxDraw3D
             // 
-            this.cBoxDraw.AutoSize = true;
-            this.cBoxDraw.Location = new System.Drawing.Point(690, 219);
-            this.cBoxDraw.Name = "cBoxDraw";
-            this.cBoxDraw.Size = new System.Drawing.Size(82, 17);
-            this.cBoxDraw.TabIndex = 10;
-            this.cBoxDraw.Text = "Draw boxes";
-            this.cBoxDraw.UseVisualStyleBackColor = true;
-            this.cBoxDraw.CheckedChanged += new System.EventHandler(this.cBoxDraw_CheckedChanged);
+            this.cBoxDraw3D.AutoSize = true;
+            this.cBoxDraw3D.Location = new System.Drawing.Point(690, 219);
+            this.cBoxDraw3D.Name = "cBoxDraw3D";
+            this.cBoxDraw3D.Size = new System.Drawing.Size(68, 17);
+            this.cBoxDraw3D.TabIndex = 10;
+            this.cBoxDraw3D.Text = "Draw 3D";
+            this.cBoxDraw3D.UseVisualStyleBackColor = true;
+            this.cBoxDraw3D.CheckedChanged += new System.EventHandler(this.cBoxDraw3D_CheckedChanged);
             // 
             // cBoxUnknown1
             // 
@@ -165,15 +165,15 @@
             this.cBoxUnknown1.Text = "checkBox5";
             this.cBoxUnknown1.UseVisualStyleBackColor = true;
             // 
-            // cBoxUnknow2
+            // cbOriginalImage
             // 
-            this.cBoxUnknow2.AutoSize = true;
-            this.cBoxUnknow2.Location = new System.Drawing.Point(690, 265);
-            this.cBoxUnknow2.Name = "cBoxUnknow2";
-            this.cBoxUnknow2.Size = new System.Drawing.Size(80, 17);
-            this.cBoxUnknow2.TabIndex = 12;
-            this.cBoxUnknow2.Text = "checkBox6";
-            this.cBoxUnknow2.UseVisualStyleBackColor = true;
+            this.cbOriginalImage.AutoSize = true;
+            this.cbOriginalImage.Location = new System.Drawing.Point(690, 265);
+            this.cbOriginalImage.Name = "cbOriginalImage";
+            this.cbOriginalImage.Size = new System.Drawing.Size(93, 17);
+            this.cbOriginalImage.TabIndex = 12;
+            this.cbOriginalImage.Text = "Original Image";
+            this.cbOriginalImage.UseVisualStyleBackColor = true;
             // 
             // lblMaxValueEx
             // 
@@ -200,10 +200,10 @@
             this.ClientSize = new System.Drawing.Size(835, 430);
             this.Controls.Add(this.lblMinValueEx);
             this.Controls.Add(this.lblMaxValueEx);
-            this.Controls.Add(this.cBoxUnknow2);
+            this.Controls.Add(this.cbOriginalImage);
             this.Controls.Add(this.cBoxUnknown1);
-            this.Controls.Add(this.cBoxDraw);
-            this.Controls.Add(this.cBoxExtractor);
+            this.Controls.Add(this.cBoxDraw3D);
+            this.Controls.Add(this.cBoxDraw2D);
             this.Controls.Add(this.tbMaxValueEx);
             this.Controls.Add(this.tbMinValueEx);
             this.Controls.Add(this.cBoxOtsu);
@@ -236,10 +236,10 @@
         private System.Windows.Forms.CheckBox cBoxOtsu;
         private System.Windows.Forms.TrackBar tbMinValueEx;
         private System.Windows.Forms.TrackBar tbMaxValueEx;
-        private System.Windows.Forms.CheckBox cBoxExtractor;
-        private System.Windows.Forms.CheckBox cBoxDraw;
+        private System.Windows.Forms.CheckBox cBoxDraw2D;
+        private System.Windows.Forms.CheckBox cBoxDraw3D;
         private System.Windows.Forms.CheckBox cBoxUnknown1;
-        private System.Windows.Forms.CheckBox cBoxUnknow2;
+        private System.Windows.Forms.CheckBox cbOriginalImage;
         private System.Windows.Forms.Label lblMaxValueEx;
         private System.Windows.Forms.Label lblMinValueEx;
 
