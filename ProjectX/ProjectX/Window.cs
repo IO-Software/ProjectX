@@ -21,8 +21,8 @@ namespace ProjectX
         private float maxScreenWidth;
         private float maxScreenHeight;
         private FilterInfoCollection videoDevices;
-        public Webcam webcam;
-        public Filters camFilters;
+        //public Webcam webcam;
+        //public Filters camFilters;
         
         public Window()
         {
@@ -37,7 +37,7 @@ namespace ProjectX
         }
 
         private void initializeFilters () {
-            camFilters = new Filters();
+            //camFilters = new Filters();
         }
 
         private void initializeWebcams()
@@ -48,15 +48,15 @@ namespace ProjectX
                 cBoxCam.Items.Add(Device.Name);
             }
             cBoxCam.SelectedIndex = 0;
-            webcam = new Webcam();
+            //webcam = new Webcam();
         }
 
         private void btnOnOff_Click(object sender, EventArgs e) 
         {
-            webcam.setVideoSource(videoDevices[cBoxCam.SelectedIndex].MonikerString);
-            if (webcam.isRunning())
+            //webcam.setVideoSource(videoDevices[cBoxCam.SelectedIndex].MonikerString);
+            if (true)
             {
-                webcam.stop();
+                //webcam.stop();
                 // Erase the last image from the memory of the picturebox
                 pBoxUp.Image = null;
                 pBoxDown.Image = null;
@@ -66,7 +66,7 @@ namespace ProjectX
             }
             else 
             {
-                webcam.turnOn(pBoxUp, pBoxDown);
+                //webcam.turnOn(pBoxUp, pBoxDown);
             }
         }
 
@@ -77,9 +77,20 @@ namespace ProjectX
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (webcam.isRunning())
+            //if (webcam.isRunning())
             {
-                webcam.stop();
+                //webcam.stop();
+            }
+        }
+
+        public PictureBox getPictureBox (int i)
+        {
+            if (i == 0)
+            {
+                return pBoxUp;
+            }
+            else {
+                return pBoxDown;
             }
         }
     }

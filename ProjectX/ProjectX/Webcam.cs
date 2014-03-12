@@ -47,7 +47,6 @@ namespace ProjectX
             // De Videokaart
             videoSource.NewFrame += new NewFrameEventHandler(videoSource_NewFrame);
             videoSource.Start();
-            Console.WriteLine("write");
         }
 
         void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -55,7 +54,7 @@ namespace ProjectX
             Bitmap original = (Bitmap)eventArgs.Frame.Clone();
             Bitmap trial = (Bitmap)eventArgs.Frame.Clone();
             pBoxUp.Image = original;
-            trial = null;
+            //trial = Filters.;
             pBoxDown.Image = trial;
         }
     }

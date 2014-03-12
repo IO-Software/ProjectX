@@ -27,7 +27,7 @@ namespace ProjectX
             otsu.Add(new OtsuThreshold());
         }
 
-        static Bitmap executeOtsu(Bitmap image)
+        public Bitmap executeOtsu(Bitmap image)
         {
             return image;
         }
