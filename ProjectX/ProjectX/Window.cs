@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections;
 
 using AForge.Video;
 using AForge.Video.DirectShow;
@@ -21,25 +22,26 @@ namespace ProjectX
         private float maxScreenWidth;
         private float maxScreenHeight;
         private FilterInfoCollection videoDevices;
-        //public Webcam webcam;
-        //public Filters camFilters;
-        
+        private Webcam webcam;
+
+        /// <summary>
+        /// The class window provides the interface of the program. This class also initializes the webcam for the pictureboxes. 
+        /// </summary>
         public Window()
         {
+            // The maximal screensizes
             maxScreenHeight = Screen.PrimaryScreen.Bounds.Height;
             maxScreenWidth = Screen.PrimaryScreen.Bounds.Width;
-            
+
             InitializeComponent(maxScreenWidth, maxScreenHeight);
-            // Initializes the filter for card recognition
-            initializeFilters();
             // Initializes the webcam for card recognition
             initializeWebcams();
         }
 
-        private void initializeFilters () {
-            //camFilters = new Filters();
-        }
-
+        /// <summary>
+        /// This method looks through all the available webcam options and adds them to the combobox. It also creates a new webcam and provides the 
+        /// webcam with pictureboxes where it can show the image
+        /// </summary>
         private void initializeWebcams()
         {
             videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -48,49 +50,49 @@ namespace ProjectX
                 cBoxCam.Items.Add(Device.Name);
             }
             cBoxCam.SelectedIndex = 0;
-            //webcam = new Webcam();
+            webcam = new Webcam(pBoxUp, pBoxDown);
         }
 
-        private void btnOnOff_Click(object sender, EventArgs e) 
+        /// <summary>
+        /// When the button on/off has been pushed it checks if the webcam is on or off. If the webcam is on it will stop the current feed of the webcam
+        /// and clears both pictureboxes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOnOff_Click(object sender, EventArgs e)
         {
-            //webcam.setVideoSource(videoDevices[cBoxCam.SelectedIndex].MonikerString);
-            if (true)
+            webcam.setVideoSource(videoDevices[cBoxCam.SelectedIndex].MonikerString);
+            if (webcam.isRunning())
             {
-                //webcam.stop();
-                // Erase the last image from the memory of the picturebox
-                pBoxUp.Image = null;
-                pBoxDown.Image = null;
-                // Refresh the picturebox
-                pBoxUp.Invalidate();
-                pBoxDown.Invalidate();
+                webcam.stop();
+                webcam.clearPictureBoxes();
             }
-            else 
+            else
             {
-                //webcam.turnOn(pBoxUp, pBoxDown);
+                webcam.turnOn();
             }
         }
 
-        private void btnQuit_Click (object sender, EventArgs e)
+        /// <summary>
+        /// When the button Quit has been pushed it checks if the webcam is running. If so, it will close the webcamfeed and shuts it down.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnQuit_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        /// <summary>
+        /// When the form is closed this method checks if the webcam is running. If so, it will close the webcamfeed and shuts it down.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //if (webcam.isRunning())
+            if (webcam.isRunning())
             {
-                //webcam.stop();
-            }
-        }
-
-        public PictureBox getPictureBox (int i)
-        {
-            if (i == 0)
-            {
-                return pBoxUp;
-            }
-            else {
-                return pBoxDown;
+                webcam.stop();
             }
         }
     }

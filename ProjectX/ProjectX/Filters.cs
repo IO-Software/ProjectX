@@ -9,27 +9,95 @@ using AForge.Imaging.Filters;
 
 namespace ProjectX
 {
-    class Filters
+    /// <summary>
+    /// This class provides the webcam with certain filters
+    /// </summary>
+    public class Filters
     {
-        private FiltersSequence otsu;
+        private FiltersSequence filter;
+        private FiltersSequence grayFilter;
+        private FiltersSequence otsuFilter;
+        private Boolean grayOn = false;
+        private Boolean otsuOn = false;
 
         public Filters()
         {
-            iniOtsu();
+            iniGrayFilter();
+            iniOtsuFilter();
         }
 
-        private void iniOtsu()
+        /// <summary>
+        /// Initializes the grayscale filter
+        /// </summary>
+        private void iniGrayFilter()
         {
-            otsu = new FiltersSequence();
-            // Add a grayscale filter to get out all the colors
-            otsu.Add(Grayscale.CommonAlgorithms.BT709);
-            // Converts the image into a binary black and white image with the otsu algorithm
-            otsu.Add(new OtsuThreshold());
+            grayFilter = new FiltersSequence();
+            grayFilter.Add(Grayscale.CommonAlgorithms.BT709);
         }
 
-        public Bitmap executeOtsu(Bitmap image)
+        /// <summary>
+        /// Initializes the otsu filter
+        /// </summary>
+        private void iniOtsuFilter()
         {
-            return image;
+            otsuFilter = new FiltersSequence();
+            otsuFilter.Add(Grayscale.CommonAlgorithms.BT709);
+            otsuFilter.Add(new OtsuThreshold());
+        }
+
+        public Bitmap applyFilter(Bitmap image)
+        {
+            if (grayOn)
+            {
+                filter = grayFilter;
+            }
+            else if (otsuOn)
+            {
+                filter = otsuFilter;
+            }
+            else
+            {
+                filter = null;
+            }
+            return filter.Apply(image);
+        }
+
+        /// <summary>
+        /// Sets the grayscale filter
+        /// </summary>
+        /// <param name="status">When true the grayscale will turn ON</param>
+        public void setGrayFilter(Boolean status)
+        {
+            if (!status)
+            {
+                grayOn = false;
+            }
+            else
+            {
+                grayOn = true;
+            }
+        }
+
+        /// <summary>
+        /// Sets the otsu filter
+        /// </summary>
+        /// <param name="status">When true the grayscale will turn ON and the grayscalefilter will turn OFF</param>
+        public void setOtsuFilter(Boolean status)
+        {
+            if (!status)
+            {
+                otsuOn = false;
+            }
+            else
+            {
+                grayOn = false;
+                otsuOn = true;
+            }
+        }
+
+        public FiltersSequence getFilterStatus()
+        {
+            return filter;
         }
     }
 }

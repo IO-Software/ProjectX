@@ -12,6 +12,7 @@ namespace ProjectX
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
+        // De main van het project. Vanuit hier start het programma
         static void Main()
         {
             Application.EnableVisualStyles();
