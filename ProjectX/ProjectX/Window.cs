@@ -95,5 +95,25 @@ namespace ProjectX
                 webcam.stop();
             }
         }
+
+        private void cBoxGreyscale_CheckedChanged(object sender, EventArgs e)
+        {
+            webcam.setGrayFilter(cBoxGreyscale.Checked);
+        }
+
+        private void cBoxOtsu_CheckedChanged(object sender, EventArgs e)
+        {
+            webcam.setOtsuFilter(cBoxOtsu.Checked);
+        }
+
+        private void cBoxExtractor_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cBoxDraw_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

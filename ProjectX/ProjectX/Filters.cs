@@ -17,8 +17,6 @@ namespace ProjectX
         private FiltersSequence filter;
         private FiltersSequence grayFilter;
         private FiltersSequence otsuFilter;
-        private Boolean grayOn = false;
-        private Boolean otsuOn = false;
 
         public Filters()
         {
@@ -46,19 +44,7 @@ namespace ProjectX
         }
 
         public Bitmap applyFilter(Bitmap image)
-        {
-            if (grayOn)
-            {
-                filter = grayFilter;
-            }
-            else if (otsuOn)
-            {
-                filter = otsuFilter;
-            }
-            else
-            {
-                filter = null;
-            }
+        {       
             return filter.Apply(image);
         }
 
@@ -70,11 +56,11 @@ namespace ProjectX
         {
             if (!status)
             {
-                grayOn = false;
+                filter = null;
             }
             else
             {
-                grayOn = true;
+                filter = grayFilter;
             }
         }
 
@@ -86,18 +72,24 @@ namespace ProjectX
         {
             if (!status)
             {
-                otsuOn = false;
+                filter = null;
             }
             else
             {
-                grayOn = false;
-                otsuOn = true;
+                filter = otsuFilter;
             }
         }
 
-        public FiltersSequence getFilterStatus()
+        public Boolean getFilterStatus()
         {
-            return filter;
+            if (filter != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -37,12 +37,12 @@ namespace ProjectX
             iniExtractor();
         }
 
-        public void iniFilters()
+        private void iniFilters()
         {
             camFilter = new Filters();
         }
 
-        public void iniExtractor()
+        private void iniExtractor()
         {
             blobExtractor = new BlobExtractor();
         }
@@ -106,7 +106,7 @@ namespace ProjectX
         {
             Bitmap original = (Bitmap)eventArgs.Frame.Clone();
             Bitmap altered = (Bitmap)eventArgs.Frame.Clone();
-            if (camFilter.getFilterStatus() != null)
+            if (camFilter.getFilterStatus() == true)
             {
                 altered = camFilter.applyFilter(altered);
             }
@@ -114,23 +114,17 @@ namespace ProjectX
             pBoxAltered.Image = altered;
         }
 
-        private void setGrayFilter(Boolean status)
+        public void setGrayFilter(Boolean status)
         {
-            if (camFilter != null)
-            {
-                camFilter.setGrayFilter(status);
-            }
+            camFilter.setGrayFilter(status);
         }
 
-        private void setOtsuFilter(Boolean status)
+        public void setOtsuFilter(Boolean status)
         {
-            if (camFilter != null)
-            {
-                camFilter.setOtsuFilter(status);
-            }
+            camFilter.setOtsuFilter(status);
         }
 
-        private void setExtractorMinimum(int minimum)
+        public void setExtractorMinimum(int minimum)
         {
             if (minimum > 0)
             {
@@ -138,7 +132,7 @@ namespace ProjectX
             }
         }
 
-        private void setExtractorMaximum(int maximum)
+        public void setExtractorMaximum(int maximum)
         {
             if (maximum < int.MaxValue)
             {

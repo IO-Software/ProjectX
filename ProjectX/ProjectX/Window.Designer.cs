@@ -106,6 +106,7 @@
             this.cBoxGreyscale.TabIndex = 5;
             this.cBoxGreyscale.Text = "Greyscale";
             this.cBoxGreyscale.UseVisualStyleBackColor = true;
+            this.cBoxGreyscale.CheckedChanged += new System.EventHandler(this.cBoxGreyscale_CheckedChanged);
             // 
             // cBoxOtsu
             // 
@@ -116,6 +117,7 @@
             this.cBoxOtsu.TabIndex = 6;
             this.cBoxOtsu.Text = "Otsu";
             this.cBoxOtsu.UseVisualStyleBackColor = true;
+            this.cBoxOtsu.CheckedChanged += new System.EventHandler(this.cBoxOtsu_CheckedChanged);
             // 
             // tbMinValueEx
             // 
@@ -140,6 +142,7 @@
             this.cBoxExtractor.TabIndex = 9;
             this.cBoxExtractor.Text = "Extractor";
             this.cBoxExtractor.UseVisualStyleBackColor = true;
+            this.cBoxExtractor.CheckedChanged += new System.EventHandler(this.cBoxExtractor_CheckedChanged);
             // 
             // cBoxDraw
             // 
@@ -150,6 +153,7 @@
             this.cBoxDraw.TabIndex = 10;
             this.cBoxDraw.Text = "Draw boxes";
             this.cBoxDraw.UseVisualStyleBackColor = true;
+            this.cBoxDraw.CheckedChanged += new System.EventHandler(this.cBoxDraw_CheckedChanged);
             // 
             // cBoxUnknown1
             // 
