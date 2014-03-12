@@ -30,7 +30,7 @@ namespace ProjectX
         /// This picturebox will show the altered webcamfeed
         public Webcam(PictureBox pBoxOriginal, PictureBox pBoxAltered)
         {
-            this.pBoxOriginal = pBoxAltered;
+            this.pBoxOriginal = pBoxOriginal;
             this.pBoxAltered = pBoxAltered;
             videoSource = new VideoCaptureDevice();
             iniFilters();
@@ -105,13 +105,13 @@ namespace ProjectX
         private void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             Bitmap original = (Bitmap)eventArgs.Frame.Clone();
-            Bitmap trial = (Bitmap)eventArgs.Frame.Clone();
+            Bitmap altered = (Bitmap)eventArgs.Frame.Clone();
             if (camFilter.getFilterStatus() != null)
             {
-                trial = camFilter.applyFilter(trial);
+                altered = camFilter.applyFilter(altered);
             }
             pBoxOriginal.Image = original;
-            pBoxAltered.Image = trial;
+            pBoxAltered.Image = altered;
         }
 
         private void setGrayFilter(Boolean status)

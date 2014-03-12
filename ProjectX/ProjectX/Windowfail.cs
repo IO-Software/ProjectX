@@ -17,7 +17,7 @@ using AForge.Imaging.Filters;
 
 namespace ProjectX
 {
-    public partial class Window : Form
+    public partial class Windowfail : Form
     {
         private float maxScreenWidth;
         private float maxScreenHeight;
@@ -27,13 +27,13 @@ namespace ProjectX
         /// <summary>
         /// The class window provides the interface of the program. This class also initializes the webcam for the pictureboxes. 
         /// </summary>
-        public Window()
+        public Windowfail()
         {
-            // The maximal screensizes (NOT USED)
+            // The maximal screensizes
             maxScreenHeight = Screen.PrimaryScreen.Bounds.Height;
             maxScreenWidth = Screen.PrimaryScreen.Bounds.Width;
 
-            InitializeComponent();
+            InitializeComponent(maxScreenWidth, maxScreenHeight);
             // Initializes the webcam for card recognition
             initializeWebcams();
         }
@@ -50,7 +50,7 @@ namespace ProjectX
                 cBoxCam.Items.Add(Device.Name);
             }
             cBoxCam.SelectedIndex = 0;
-            webcam = new Webcam(pBoxOriginal, pBoxAltered);
+            webcam = new Webcam(pBoxUp, pBoxDown);
         }
 
         /// <summary>

@@ -51,14 +51,14 @@ namespace ProjectX
 
                 using (var draw = Graphics.FromImage(image))
                 {
-                    if (corners.Count = 4)
+                    if (corners.Count == 4)
                     {
-                        for 
+                         
                     }
                 }
                 
             }
-
+            return null;
         }
     }
 }
