@@ -21,17 +21,12 @@ namespace ProjectX
         private Boolean draw3D;
         private Pen pen = new Pen(Color.Red, 2);
 
-        public BlobExtractor()
-        {
-            iniExtractor();
-        }
-
-        private void iniExtractor()
+        public BlobExtractor(int blobMin, int blobMax)
         {
             extractor = new BlobCounter();
             extractor.FilterBlobs = true;
-            extractor.MinWidth = extractor.MinHeight = 30;
-            extractor.MaxWidth = extractor.MaxHeight = 500;
+            extractor.MinWidth = extractor.MinHeight = blobMin;
+            extractor.MaxWidth = extractor.MaxHeight = blobMax; 
         }
 
         public void setMinimum(int minimum)

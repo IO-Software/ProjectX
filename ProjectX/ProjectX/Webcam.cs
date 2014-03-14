@@ -32,18 +32,18 @@ namespace ProjectX
         /// This picturebox will show the original webcamfeed
         /// <param name="pBoxTr"></param>
         /// This picturebox will show the altered webcamfeed
-        public Webcam(PictureBox pBoxOriginal, PictureBox pBoxAltered, Filters camFilter)
+        public Webcam(PictureBox pBoxOriginal, PictureBox pBoxAltered, Filters camFilter, int blobMin, int blobMax)
         {
             this.pBoxOriginal = pBoxOriginal;
             this.pBoxAltered = pBoxAltered;
             this.camFilter = camFilter;
             videoSource = new VideoCaptureDevice();
-            iniExtractor();
+            iniExtractor(blobMin, blobMax);
         }
 
-        private void iniExtractor()
+        private void iniExtractor(int blobMin, int blobMax)
         {
-            blobExtractor = new BlobExtractor();
+            blobExtractor = new BlobExtractor(blobMin, blobMax);
         }
 
         /// <summary>

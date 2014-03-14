@@ -61,7 +61,7 @@ namespace ProjectX
                 cBoxCam.Items.Add(Device.Name);
             }
             cBoxCam.SelectedIndex = 0;
-            webcam = new Webcam(pBoxOriginal, pBoxAltered, camFilter);
+            webcam = new Webcam(pBoxOriginal, pBoxAltered, camFilter, tbMinValueEx.Value, tbMaxValueEx.Value);
         }
 
         private void initializeFilters()
