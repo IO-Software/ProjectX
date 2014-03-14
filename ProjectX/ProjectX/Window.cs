@@ -25,6 +25,14 @@ namespace ProjectX
         private Webcam webcam;
         private Filters camFilter;
 
+        private const int caseGreyscale = 0;
+        private const int caseOtsu = 1;
+        private const int caseDraw2D = 2;
+        private const int caseDraw3D = 3;
+
+        private int trackMinValue = 0;
+        private int trackMaxValue = 500;
+
         /// <summary>
         /// The class window provides the interface of the program. This class also initializes the webcam for the pictureboxes. 
         /// </summary>
@@ -104,30 +112,62 @@ namespace ProjectX
             }
         }
 
-        private void cBoxGreyscale_CheckedChanged(object sender, EventArgs e)
+        private void cBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            webcam.setGrayFilter(cBoxGreyscale.Checked);
-            if (cBoxGreyscale.Checked == false)
+            switch (cBoxChoice.SelectedIndex)
             {
-                cBoxOtsu.Checked = false;
+                case caseGreyscale:
+                    webcam.setGrayFilter(true);
+                    webcam.setOtsuFilter(false);
+                    webcam.blobExtractor.setDraw2D(false);
+                    webcam.blobExtractor.setDraw3D(false);
+                    webcam.setDrawBlobs(false);
+                    break;
+                case caseOtsu:
+                    webcam.setGrayFilter(false);
+                    webcam.setOtsuFilter(true);
+                    webcam.blobExtractor.setDraw2D(false);
+                    webcam.blobExtractor.setDraw3D(false);
+                    webcam.setDrawBlobs(false);
+                    break;
+                case caseDraw2D:
+                    webcam.setGrayFilter(false);
+                    webcam.setOtsuFilter(true);
+                    webcam.blobExtractor.setDraw2D(true);
+                    webcam.blobExtractor.setDraw3D(false);
+                    webcam.setDrawBlobs(true);
+                    break;
+                case caseDraw3D:
+                    webcam.setGrayFilter(false);
+                    webcam.setOtsuFilter(true);
+                    webcam.blobExtractor.setDraw2D(true);
+                    webcam.blobExtractor.setDraw3D(true);
+                    webcam.setDrawBlobs(true);
+                    break; 
             }
         }
 
-        private void cBoxOtsu_CheckedChanged(object sender, EventArgs e)
+        private void tbMinValueEx_Scroll(object sender, EventArgs e)
         {
-            webcam.setOtsuFilter(cBoxOtsu.Checked);
-            cBoxGreyscale.Checked = cBoxOtsu.Checked;
+            
+            if (tbMinValueEx.Value + 2 > tbMaxValueEx.Value)
+            {
+                tbMaxValueEx.Value = tbMinValueEx.Value + 1;
+            }
+            lblMinValueEx.Text = "Minimum value extractor: " + tbMinValueEx.Value;
+            lblMaxValueEx.Text = "Maximum value extractor: " + tbMaxValueEx.Value;
+            webcam.blobExtractor.setMinimum(tbMinValueEx.Value);
         }
 
-        private void cBoxDraw2D_CheckedChanged(object sender, EventArgs e)
+        private void tbMaxValueEx_Scroll(object sender, EventArgs e)
         {
-            webcam.setDrawing2D(cBoxDraw2D.Checked);
-        }
-
-        private void cBoxDraw3D_CheckedChanged(object sender, EventArgs e)
-        {
-            webcam.setDrawing3D(cBoxDraw3D.Checked);
-            cBoxDraw2D.Checked = cBoxDraw3D.Checked;
+            if (tbMaxValueEx.Value - 2 < tbMinValueEx.Value)
+            {
+                tbMinValueEx.Value = tbMaxValueEx.Value - 1;
+            }
+            lblMinValueEx.Text = "Minimum value extractor: " + tbMinValueEx.Value;
+            lblMaxValueEx.Text = "Maximum value extractor: " + tbMaxValueEx.Value;
+            webcam.blobExtractor.setMaximum(tbMaxValueEx.Value);
         }
     }
 }

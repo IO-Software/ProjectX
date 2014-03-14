@@ -8,6 +8,8 @@ using System.Windows.Forms;
 
 using AForge.Video.DirectShow;
 using AForge.Video;
+using System.Collections;
+using AForge;
 
 namespace ProjectX
 {
@@ -15,12 +17,13 @@ namespace ProjectX
     {
         private VideoCaptureDevice videoSource;
         private String videoSourceString;
-        private Filters camFilter;
-        private BlobExtractor blobExtractor;
+        public Filters camFilter;
+        public BlobExtractor blobExtractor;
         private PictureBox pBoxOriginal;
         private PictureBox pBoxAltered;
-        private Boolean draw2D;
-        private Boolean draw3D;
+        private Boolean grayFilterOn;
+        private Boolean otsuFilterOn;
+        private Boolean drawBlobs;
 
         /// <summary>
         /// Creates a new webcam with two pictureboxes where the webcam can show the feed.
@@ -100,25 +103,44 @@ namespace ProjectX
         /// <param name="eventArgs"></param>
         private void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            Bitmap original = (Bitmap)eventArgs.Frame.Clone();
-            Bitmap altered = (Bitmap)eventArgs.Frame.Clone();
-            if (camFilter.getFilterStatus())
+            try
             {
-                altered = camFilter.applyFilter(altered);
-                blobExtractor.extractBlobs(altered);
+                Bitmap original = (Bitmap)eventArgs.Frame.Clone();
+                Bitmap altered = (Bitmap)eventArgs.Frame.Clone();
+                if (grayFilterOn)
+                {
+                    altered = camFilter.applyGreyFilter(original);
+                }
+                else if (otsuFilterOn)
+                {
+                    altered = camFilter.applyOtsuFilter(original);
+                }
+                if (drawBlobs)
+                {
+                    altered = blobExtractor.extractBlobs(original, altered);
+                }
+                pBoxAltered.Image = altered;
+                pBoxOriginal.Image = original;
             }
-            pBoxOriginal.Image = original;
-            pBoxAltered.Image = altered;
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine("FOUT OPGETREDEN BIJ HET TEKENEN: " + e.StackTrace);
+            }
         }
 
         public void setGrayFilter(Boolean status)
         {
-            camFilter.setGrayFilter(status);
+            grayFilterOn = status;
         }
 
         public void setOtsuFilter(Boolean status)
         {
-            camFilter.setOtsuFilter(status);
+            otsuFilterOn = status;
+        }
+
+        public void setDrawBlobs(Boolean status)
+        {
+            drawBlobs = status;
         }
 
         public void setExtractorMinimum(int minimum)
@@ -135,16 +157,6 @@ namespace ProjectX
             {
                 blobExtractor.setMaximum(maximum);
             }
-        }
-
-        public void setDrawing2D(Boolean status)
-        {
-            draw2D = status;
-        }
-
-        public void setDrawing3D(Boolean status)
-        {
-            draw3D = status;
         }
     }
 }

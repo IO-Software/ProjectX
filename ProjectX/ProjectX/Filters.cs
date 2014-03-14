@@ -14,7 +14,6 @@ namespace ProjectX
     /// </summary>
     public class Filters
     {
-        private FiltersSequence filter;
         private FiltersSequence grayFilter;
         private FiltersSequence otsuFilter;
 
@@ -45,55 +44,14 @@ namespace ProjectX
             otsuFilter.Add(new OtsuThreshold());
         }
 
-        public Bitmap applyFilter(Bitmap image)
+        public Bitmap applyGreyFilter(Bitmap image)
         {       
-            return filter.Apply(image);
+            return grayFilter.Apply(image);
         }
 
-        /// <summary>
-        /// Sets the grayscale filter
-        /// </summary>
-        /// <param name="status">When true the grayscale will turn ON</param>
-        public void setGrayFilter(Boolean status)
+        public Bitmap applyOtsuFilter(Bitmap image)
         {
-            if (!status)
-            {
-                filter = null;
-            }
-            else if (status & !otsuOn)
-            {
-                filter = grayFilter;
-            }
-        }
-
-        /// <summary>
-        /// Sets the otsu filter
-        /// </summary>
-        /// <param name="status">When true the grayscale will turn ON and the grayscalefilter will turn OFF</param>
-        public void setOtsuFilter(Boolean status)
-        {
-            if (!status)
-            {
-                filter = null;
-                otsuOn = false;
-            }
-            else
-            {
-                filter = otsuFilter;
-                otsuOn = true;
-            }
-        }
-
-        public Boolean getFilterStatus()
-        {
-            if (filter != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return otsuFilter.Apply(image);
         }
     }
 }

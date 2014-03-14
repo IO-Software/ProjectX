@@ -33,16 +33,11 @@
             this.btnOnOff = new System.Windows.Forms.Button();
             this.btnQuit = new System.Windows.Forms.Button();
             this.cBoxCam = new System.Windows.Forms.ComboBox();
-            this.cBoxGreyscale = new System.Windows.Forms.CheckBox();
-            this.cBoxOtsu = new System.Windows.Forms.CheckBox();
             this.tbMinValueEx = new System.Windows.Forms.TrackBar();
             this.tbMaxValueEx = new System.Windows.Forms.TrackBar();
-            this.cBoxDraw2D = new System.Windows.Forms.CheckBox();
-            this.cBoxDraw3D = new System.Windows.Forms.CheckBox();
-            this.cBoxUnknown1 = new System.Windows.Forms.CheckBox();
-            this.cbOriginalImage = new System.Windows.Forms.CheckBox();
             this.lblMaxValueEx = new System.Windows.Forms.Label();
             this.lblMinValueEx = new System.Windows.Forms.Label();
+            this.cBoxChoice = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxAltered)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxOriginal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbMinValueEx)).BeginInit();
@@ -97,117 +92,70 @@
             this.cBoxCam.Size = new System.Drawing.Size(212, 21);
             this.cBoxCam.TabIndex = 4;
             // 
-            // cBoxGreyscale
-            // 
-            this.cBoxGreyscale.AutoSize = true;
-            this.cBoxGreyscale.Location = new System.Drawing.Point(611, 219);
-            this.cBoxGreyscale.Name = "cBoxGreyscale";
-            this.cBoxGreyscale.Size = new System.Drawing.Size(73, 17);
-            this.cBoxGreyscale.TabIndex = 5;
-            this.cBoxGreyscale.Text = "Greyscale";
-            this.cBoxGreyscale.UseVisualStyleBackColor = true;
-            this.cBoxGreyscale.CheckedChanged += new System.EventHandler(this.cBoxGreyscale_CheckedChanged);
-            // 
-            // cBoxOtsu
-            // 
-            this.cBoxOtsu.AutoSize = true;
-            this.cBoxOtsu.Location = new System.Drawing.Point(611, 242);
-            this.cBoxOtsu.Name = "cBoxOtsu";
-            this.cBoxOtsu.Size = new System.Drawing.Size(48, 17);
-            this.cBoxOtsu.TabIndex = 6;
-            this.cBoxOtsu.Text = "Otsu";
-            this.cBoxOtsu.UseVisualStyleBackColor = true;
-            this.cBoxOtsu.CheckedChanged += new System.EventHandler(this.cBoxOtsu_CheckedChanged);
-            // 
             // tbMinValueEx
             // 
-            this.tbMinValueEx.Location = new System.Drawing.Point(611, 310);
+            this.tbMinValueEx.Location = new System.Drawing.Point(611, 261);
+            this.tbMinValueEx.Maximum = 499;
+            this.tbMinValueEx.Minimum = 10;
             this.tbMinValueEx.Name = "tbMinValueEx";
             this.tbMinValueEx.Size = new System.Drawing.Size(212, 45);
             this.tbMinValueEx.TabIndex = 7;
+            this.tbMinValueEx.Value = 10;
+            this.tbMinValueEx.Scroll += new System.EventHandler(this.tbMinValueEx_Scroll);
             // 
             // tbMaxValueEx
             // 
-            this.tbMaxValueEx.Location = new System.Drawing.Point(611, 374);
+            this.tbMaxValueEx.Location = new System.Drawing.Point(611, 327);
+            this.tbMaxValueEx.Maximum = 500;
+            this.tbMaxValueEx.Minimum = 11;
             this.tbMaxValueEx.Name = "tbMaxValueEx";
             this.tbMaxValueEx.Size = new System.Drawing.Size(212, 45);
             this.tbMaxValueEx.TabIndex = 8;
-            // 
-            // cBoxDraw2D
-            // 
-            this.cBoxDraw2D.AutoSize = true;
-            this.cBoxDraw2D.Location = new System.Drawing.Point(611, 265);
-            this.cBoxDraw2D.Name = "cBoxDraw2D";
-            this.cBoxDraw2D.Size = new System.Drawing.Size(68, 17);
-            this.cBoxDraw2D.TabIndex = 9;
-            this.cBoxDraw2D.Text = "Draw 2D";
-            this.cBoxDraw2D.UseVisualStyleBackColor = true;
-            this.cBoxDraw2D.CheckedChanged += new System.EventHandler(this.cBoxDraw2D_CheckedChanged);
-            // 
-            // cBoxDraw3D
-            // 
-            this.cBoxDraw3D.AutoSize = true;
-            this.cBoxDraw3D.Location = new System.Drawing.Point(690, 219);
-            this.cBoxDraw3D.Name = "cBoxDraw3D";
-            this.cBoxDraw3D.Size = new System.Drawing.Size(68, 17);
-            this.cBoxDraw3D.TabIndex = 10;
-            this.cBoxDraw3D.Text = "Draw 3D";
-            this.cBoxDraw3D.UseVisualStyleBackColor = true;
-            this.cBoxDraw3D.CheckedChanged += new System.EventHandler(this.cBoxDraw3D_CheckedChanged);
-            // 
-            // cBoxUnknown1
-            // 
-            this.cBoxUnknown1.AutoSize = true;
-            this.cBoxUnknown1.Location = new System.Drawing.Point(690, 242);
-            this.cBoxUnknown1.Name = "cBoxUnknown1";
-            this.cBoxUnknown1.Size = new System.Drawing.Size(80, 17);
-            this.cBoxUnknown1.TabIndex = 11;
-            this.cBoxUnknown1.Text = "checkBox5";
-            this.cBoxUnknown1.UseVisualStyleBackColor = true;
-            // 
-            // cbOriginalImage
-            // 
-            this.cbOriginalImage.AutoSize = true;
-            this.cbOriginalImage.Location = new System.Drawing.Point(690, 265);
-            this.cbOriginalImage.Name = "cbOriginalImage";
-            this.cbOriginalImage.Size = new System.Drawing.Size(93, 17);
-            this.cbOriginalImage.TabIndex = 12;
-            this.cbOriginalImage.Text = "Original Image";
-            this.cbOriginalImage.UseVisualStyleBackColor = true;
+            this.tbMaxValueEx.Value = 500;
+            this.tbMaxValueEx.Scroll += new System.EventHandler(this.tbMaxValueEx_Scroll);
             // 
             // lblMaxValueEx
             // 
             this.lblMaxValueEx.AutoSize = true;
-            this.lblMaxValueEx.Location = new System.Drawing.Point(624, 358);
+            this.lblMaxValueEx.Location = new System.Drawing.Point(624, 311);
             this.lblMaxValueEx.Name = "lblMaxValueEx";
             this.lblMaxValueEx.Size = new System.Drawing.Size(124, 13);
             this.lblMaxValueEx.TabIndex = 13;
-            this.lblMaxValueEx.Text = "Maximum value extractor";
+            this.lblMaxValueEx.Text = "Maximum value extractor: " + tbMaxValueEx.Value;
             // 
             // lblMinValueEx
             // 
             this.lblMinValueEx.AutoSize = true;
-            this.lblMinValueEx.Location = new System.Drawing.Point(624, 294);
+            this.lblMinValueEx.Location = new System.Drawing.Point(624, 245);
             this.lblMinValueEx.Name = "lblMinValueEx";
             this.lblMinValueEx.Size = new System.Drawing.Size(121, 13);
             this.lblMinValueEx.TabIndex = 14;
-            this.lblMinValueEx.Text = "Minimum value extractor";
+            this.lblMinValueEx.Text = "Minimum value extractor: " + tbMinValueEx.Value;
+            // 
+            // cBoxChoice
+            // 
+            this.cBoxChoice.FormattingEnabled = true;
+            this.cBoxChoice.Items.AddRange(new object[] {
+            "Greyscale Filter",
+            "Otsu Filter",
+            "Draw 2D",
+            "Draw 3D"});
+            this.cBoxChoice.Location = new System.Drawing.Point(611, 219);
+            this.cBoxChoice.Name = "cBoxChoice";
+            this.cBoxChoice.Size = new System.Drawing.Size(212, 21);
+            this.cBoxChoice.TabIndex = 15;
+            this.cBoxChoice.SelectedIndexChanged += new System.EventHandler(this.cBox_SelectedIndexChanged);
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(835, 430);
+            this.Controls.Add(this.cBoxChoice);
             this.Controls.Add(this.lblMinValueEx);
             this.Controls.Add(this.lblMaxValueEx);
-            this.Controls.Add(this.cbOriginalImage);
-            this.Controls.Add(this.cBoxUnknown1);
-            this.Controls.Add(this.cBoxDraw3D);
-            this.Controls.Add(this.cBoxDraw2D);
             this.Controls.Add(this.tbMaxValueEx);
             this.Controls.Add(this.tbMinValueEx);
-            this.Controls.Add(this.cBoxOtsu);
-            this.Controls.Add(this.cBoxGreyscale);
             this.Controls.Add(this.cBoxCam);
             this.Controls.Add(this.btnQuit);
             this.Controls.Add(this.btnOnOff);
@@ -232,16 +180,11 @@
         private System.Windows.Forms.Button btnOnOff;
         private System.Windows.Forms.Button btnQuit;
         private System.Windows.Forms.ComboBox cBoxCam;
-        private System.Windows.Forms.CheckBox cBoxGreyscale;
-        private System.Windows.Forms.CheckBox cBoxOtsu;
         private System.Windows.Forms.TrackBar tbMinValueEx;
         private System.Windows.Forms.TrackBar tbMaxValueEx;
-        private System.Windows.Forms.CheckBox cBoxDraw2D;
-        private System.Windows.Forms.CheckBox cBoxDraw3D;
-        private System.Windows.Forms.CheckBox cBoxUnknown1;
-        private System.Windows.Forms.CheckBox cbOriginalImage;
         private System.Windows.Forms.Label lblMaxValueEx;
         private System.Windows.Forms.Label lblMinValueEx;
+        private System.Windows.Forms.ComboBox cBoxChoice;
 
     }
 }
