@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{33687749-0825-4058-A090-1AB8925454CF}</ProjectGuid>
+    <ProjectGuid>{0696BDF5-AA40-4FCF-BBFD-67B561E0A723}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProjectX</RootNamespace>
-    <AssemblyName>ProjectX</AssemblyName>
+    <RootNamespace>ProjectY</RootNamespace>
+    <AssemblyName>ProjectY</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -67,16 +67,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arraylist.cs" />
     <Compile Include="BlobExtractor.cs" />
-    <Compile Include="Filters.cs" />
-    <Compile Include="QR_Reader.cs" />
+    <Compile Include="Codes.cs" />
+    <Compile Include="CodeScanner.cs" />
+    <Compile Include="Webcam.cs" />
+    <Compile Include="Filter.cs" />
     <Compile Include="Window.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Window.Designer.cs">
       <DependentUpon>Window.cs</DependentUpon>
     </Compile>
-    <Compile Include="Webcam.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Window.resx">

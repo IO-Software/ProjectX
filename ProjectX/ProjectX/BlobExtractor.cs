@@ -10,6 +10,7 @@ using AForge;
 using AForge.Math;
 using AForge.Math.Geometry;
 using System.Collections;
+using AForge.Imaging.Filters;
 
 
 namespace ProjectX
@@ -19,14 +20,20 @@ namespace ProjectX
         private BlobCounter extractor;
         private Boolean draw2D;
         private Boolean draw3D;
-        private Pen pen = new Pen(Color.Red, 2);
+       private Pen pen = new Pen(Color.Red, 2);
+        private int blobWidth = 50;
+        private int blobHeight = 50;
+        private QuadrilateralTransformation quadTransformer;
+        private ResizeBilinear resizer;
 
         public BlobExtractor(int blobMin, int blobMax)
         {
             extractor = new BlobCounter();
             extractor.FilterBlobs = true;
             extractor.MinWidth = extractor.MinHeight = blobMin;
-            extractor.MaxWidth = extractor.MaxHeight = blobMax; 
+            extractor.MaxWidth = extractor.MaxHeight = blobMax;
+            quadTransformer = new QuadrilateralTransformation();
+            resizer = new ResizeBilinear(blobWidth, blobHeight);
         }
 
         public void setMinimum(int minimum)
@@ -86,6 +93,8 @@ namespace ProjectX
                                 graphics.DrawLine(pen, corners[1].X, corners[1].Y - IDistance, corners[2].X, corners[2].Y - IDistance);
                                 graphics.DrawLine(pen, corners[2].X, corners[2].Y - IDistance, corners[3].X, corners[3].Y - IDistance);
                                 graphics.DrawLine(pen, corners[3].X, corners[3].Y - IDistance, corners[0].X, corners[0].Y - IDistance);
+
+
                             }
                         }
                     }

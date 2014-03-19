@@ -124,7 +124,7 @@ namespace ProjectX
             }
             catch (InvalidOperationException e)
             {
-                Console.WriteLine("FOUT OPGETREDEN BIJ HET TEKENEN: " + e.StackTrace);
+                Console.WriteLine("FOUT OPGETREDEN: " + e.StackTrace);
             }
         }
 
