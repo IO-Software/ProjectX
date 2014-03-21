@@ -20,7 +20,7 @@ namespace ProjectY
 
         public static String getCode()
         {
-            return "Hallo";
+            return "Hier zullen de QR codes worden ingeladen";
         }
     }
 }

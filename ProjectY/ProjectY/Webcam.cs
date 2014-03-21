@@ -24,6 +24,7 @@ namespace ProjectY
         private QuadrilateralTransformation quadTransformation;
         private CodeScanner codeScanner;
         private String recognition;
+        private Bitmap testImage;
 
         public Webcam(PictureBox pboxStream)
         {
@@ -84,20 +85,44 @@ namespace ProjectY
 
         private void analyseImage(ArrayList cornerPoints, Bitmap stream)
         {
-            ArrayList blobImages = new ArrayList();
-            foreach (List<IntPoint> corners in cornerPoints)
+            try
             {
-                quadTransformation = new QuadrilateralTransformation(corners, 200, 200);
-                blobImages.Add(quadTransformation.Apply(stream));
-            }
-            foreach (Bitmap imageAnalysis in blobImages)
-            {
-                recognition = codeScanner.scan(imageAnalysis);
-                if (recognition != null)
+                ArrayList blobImages = new ArrayList();
+
+                // Zorgt er voor dat het gedeelte van het plaatje dat wordt aangegeven in de blob uit de image wordt gesneden en kan worden geanalyseerd. Daarna wordt deze in een array gestopt van plaatjes
+                if (cornerPoints.Count > 0)
                 {
-                    // VOEG AL DE INFO BIJ ELKAAR
+                    foreach (List<IntPoint> corners in cornerPoints)
+                    {
+                        quadTransformation = new QuadrilateralTransformation(corners, 200, 200);
+                        blobImages.Add(quadTransformation.Apply(stream));
+                    }
+
+                    // Toegevoegd om te testen
+                    if (blobImages.Count != 0)
+                    {
+                        testImage = (Bitmap)blobImages[0];
+                    }
+                    // Voor elke image in de image array van de blobs wordt een scanner overheen gegooid om te kijken of dit een code is die we kunnen gebruiken en om deze dan ook meteen te identificeren.
+                    foreach (Bitmap imageAnalysis in blobImages)
+                    {
+                        recognition = codeScanner.scan(imageAnalysis);
+                        if (recognition != null)
+                        {
+                            // VOEG AL DE INFO BIJ ELKAAR
+                        }
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("FOUT: " + e.StackTrace);
+            }
+        }
+
+        public void test(PictureBox test)
+        {
+            test.Image = testImage;
         }
     }
 }

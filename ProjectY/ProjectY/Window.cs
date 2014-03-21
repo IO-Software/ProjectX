@@ -66,5 +66,10 @@ namespace ProjectY
                 webcam.stop();
             }
         }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            webcam.test(pboxTest);
+        }
     }
 }

@@ -14,10 +14,8 @@ namespace ProjectY
     class BlobExtractor
     {
         private BlobCounter extractor;
-        private int blobMin = 50;
-        private int blobMax = 50;
-        private int blobWidth = 100;
-        private int blobHeight = 100;
+        private int blobMin = 100;
+        private int blobMax = 400;
 
         public BlobExtractor()
         {

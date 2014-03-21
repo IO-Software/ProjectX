@@ -32,7 +32,10 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.btnQuit = new System.Windows.Forms.Button();
             this.cboxWebcams = new System.Windows.Forms.ComboBox();
+            this.btnTest = new System.Windows.Forms.Button();
+            this.pboxTest = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pboxStream)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pboxTest)).BeginInit();
             this.SuspendLayout();
             // 
             // pboxStream
@@ -72,11 +75,31 @@
             this.cboxWebcams.Size = new System.Drawing.Size(316, 21);
             this.cboxWebcams.TabIndex = 3;
             // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(174, 357);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(75, 23);
+            this.btnTest.TabIndex = 4;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
+            // pboxTest
+            // 
+            this.pboxTest.Location = new System.Drawing.Point(701, 12);
+            this.pboxTest.Name = "pboxTest";
+            this.pboxTest.Size = new System.Drawing.Size(200, 200);
+            this.pboxTest.TabIndex = 5;
+            this.pboxTest.TabStop = false;
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(707, 389);
+            this.ClientSize = new System.Drawing.Size(909, 389);
+            this.Controls.Add(this.pboxTest);
+            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.cboxWebcams);
             this.Controls.Add(this.btnQuit);
             this.Controls.Add(this.btnStart);
@@ -85,6 +108,7 @@
             this.Text = "Project Y";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Window_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pboxStream)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pboxTest)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -95,6 +119,8 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnQuit;
         private System.Windows.Forms.ComboBox cboxWebcams;
+        private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.PictureBox pboxTest;
     }
 }
 
