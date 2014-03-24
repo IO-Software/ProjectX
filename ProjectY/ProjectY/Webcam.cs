@@ -17,7 +17,7 @@ namespace ProjectY
     class Webcam
     {
         private PictureBox pboxStream;
-        private Filter Filter;
+        private Filter filter;
         private BlobExtractor blobExtractor;
         private String videoSourceString;
         private VideoCaptureDevice videoSource;
@@ -30,12 +30,11 @@ namespace ProjectY
         {
             this.pboxStream = pboxStream;
             Initialize();
-            Console.WriteLine(Codes.getCode());
         }
 
         private void Initialize()
         {
-            Filter = new Filter();
+            filter = new Filter();
             blobExtractor = new BlobExtractor();
             videoSource = new VideoCaptureDevice();
         }
@@ -73,8 +72,8 @@ namespace ProjectY
             try
             {
                 Bitmap stream = (Bitmap)eventArgs.Frame.Clone();
-                Bitmap streamAnalysis = Filter.applyFilter(stream);
-                analyseImage(blobExtractor.extractBlob(streamAnalysis), stream);
+                Bitmap streamAnalysis = filter.applyFilter(stream);
+                analyseImage(blobExtractor.extractBlob(streamAnalysis), streamAnalysis);
                 pboxStream.Image = stream;
             }
             catch (InvalidOperationException e)
@@ -94,19 +93,19 @@ namespace ProjectY
                 {
                     foreach (List<IntPoint> corners in cornerPoints)
                     {
-                        quadTransformation = new QuadrilateralTransformation(corners, 200, 200);
+                        quadTransformation = new QuadrilateralTransformation(corners, 50, 50);
                         blobImages.Add(quadTransformation.Apply(stream));
                     }
 
-                    // Toegevoegd om te testen
-                    if (blobImages.Count != 0)
+                    if (blobImages[0] != null)
                     {
-                        testImage = (Bitmap)blobImages[0];
+                        testImage = (Bitmap) blobImages[0];
                     }
+
                     // Voor elke image in de image array van de blobs wordt een scanner overheen gegooid om te kijken of dit een code is die we kunnen gebruiken en om deze dan ook meteen te identificeren.
                     foreach (Bitmap imageAnalysis in blobImages)
                     {
-                        recognition = codeScanner.scan(imageAnalysis);
+                        //recognition = codeScanner.scan(imageAnalysis);
                         if (recognition != null)
                         {
                             // VOEG AL DE INFO BIJ ELKAAR
@@ -120,9 +119,10 @@ namespace ProjectY
             }
         }
 
-        public void test(PictureBox test)
+        public void test(PictureBox test, PictureBox test2)
         {
-            test.Image = testImage;
+            test2.Image = testImage;
+            test.Image = filter.applyFilter(testImage);
         }
     }
 }

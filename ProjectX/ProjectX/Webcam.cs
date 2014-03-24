@@ -120,7 +120,6 @@ namespace ProjectX
                     altered = blobExtractor.extractBlobs(original, altered);
                 }
                 pBoxAltered.Image = altered;
-                pBoxOriginal.Image = original;
             }
             catch (InvalidOperationException e)
             {

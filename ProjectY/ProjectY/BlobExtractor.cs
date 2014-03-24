@@ -14,8 +14,8 @@ namespace ProjectY
     class BlobExtractor
     {
         private BlobCounter extractor;
-        private int blobMin = 100;
-        private int blobMax = 400;
+        private int blobMin = 26;
+        private int blobMax = 183;
 
         public BlobExtractor()
         {
@@ -38,7 +38,10 @@ namespace ProjectY
             {
                 List<IntPoint> edgePoints = extractor.GetBlobsEdgePoints(blob);
                 List<IntPoint> corners = PointsCloud.FindQuadrilateralCorners(edgePoints);
-                cornerPoints.Add(corners);
+                if (corners.Count == 4)
+                {
+                    cornerPoints.Add(corners);
+                }
             }
             return cornerPoints;
         }

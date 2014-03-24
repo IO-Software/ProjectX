@@ -21,7 +21,6 @@ namespace ProjectY
     {
         private FilterInfoCollection videoDevices;
         private Webcam webcam;
-        private Filter camFilter;
 
         public Window()
         {
@@ -69,7 +68,7 @@ namespace ProjectY
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            webcam.test(pboxTest);
+            webcam.test(pboxTest, pBoxTest2);
         }
     }
 }

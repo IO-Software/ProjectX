@@ -34,8 +34,10 @@
             this.cboxWebcams = new System.Windows.Forms.ComboBox();
             this.btnTest = new System.Windows.Forms.Button();
             this.pboxTest = new System.Windows.Forms.PictureBox();
+            this.pBoxTest2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pboxStream)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxTest)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBoxTest2)).BeginInit();
             this.SuspendLayout();
             // 
             // pboxStream
@@ -90,14 +92,25 @@
             this.pboxTest.Location = new System.Drawing.Point(701, 12);
             this.pboxTest.Name = "pboxTest";
             this.pboxTest.Size = new System.Drawing.Size(200, 200);
+            this.pboxTest.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pboxTest.TabIndex = 5;
             this.pboxTest.TabStop = false;
+            // 
+            // pBoxTest2
+            // 
+            this.pBoxTest2.Location = new System.Drawing.Point(701, 218);
+            this.pBoxTest2.Name = "pBoxTest2";
+            this.pBoxTest2.Size = new System.Drawing.Size(200, 200);
+            this.pBoxTest2.TabIndex = 6;
+            this.pBoxTest2.TabStop = false;
+            this.pBoxTest2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(909, 389);
+            this.ClientSize = new System.Drawing.Size(909, 437);
+            this.Controls.Add(this.pBoxTest2);
             this.Controls.Add(this.pboxTest);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.cboxWebcams);
@@ -109,6 +122,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Window_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pboxStream)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxTest)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBoxTest2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -121,6 +135,7 @@
         private System.Windows.Forms.ComboBox cboxWebcams;
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.PictureBox pboxTest;
+        private System.Windows.Forms.PictureBox pBoxTest2;
     }
 }
 

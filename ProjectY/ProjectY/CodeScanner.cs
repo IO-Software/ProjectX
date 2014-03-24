@@ -22,9 +22,8 @@ namespace ProjectY
         public String scan(Bitmap image)
         {
             ArrayList croppedImages = convertToCroppedImages(image);
-            lockBits(croppedImages);
-            convertToQRCode();
-            getCode();
+            ArrayList arrayQRCode = lockAndReadBits(croppedImages);
+            int code = getCode(arrayQRCode);
             unlockBits();
             // AANPASSEN
             return null;
@@ -38,15 +37,16 @@ namespace ProjectY
                 for (int j = 0; j < 2; j++)
                 {
                     // Deelt de bitmap in negen (3x3)
-                    Crop crop = new Crop(new Rectangle((source.Width/3)*i, (source.Height/3)*j, source.Width/3, source.Height/3));
+                    Crop crop = new Crop(new Rectangle((source.Width / 3) * i, (source.Height / 3) * j, source.Width / 3, source.Height / 3));
                     croppedImages.Add(crop.Apply(source));
                 }
             }
             return croppedImages;
         }
 
-        private void lockBits(ArrayList croppedImages)
+        private ArrayList lockAndReadBits(ArrayList croppedImages)
         {
+            ArrayList arrayQRCode = new ArrayList();
             foreach (Bitmap crop in croppedImages)
             {
                 // Lock the bitmap bits
@@ -62,30 +62,49 @@ namespace ProjectY
 
                 // Copy the RGB values into the array
                 System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
-                determineColor(rgbValues, bytes);
+
+                // Add the corresponding Colorvalue of the rgbvalue to the QRCode array
+                arrayQRCode.Add(determineColor(rgbValues, bytes));
             }
-            
+            return arrayQRCode;
         }
 
         private int determineColor(byte[] rgbValues, int rgbValueCount)
         {
+            int ValueBlack = 0;
+            int ValueWhite = 0;
             for (int i = 0; i < rgbValueCount; i++)
             {
-                // Per pixel zijn er 3 int waardes die interesssant zijn. Deze int waardes kunnen worden gecheckt door i + (2*i) + 0, 1 of 2. De RGB waardes moeten nog worden getest.
+                // Per pixel zijn er 3 int waardes die interesssant zijn (i + (2*i) + 0, 1 of 2). De RGB waardes moeten nog worden getest.
+                int r = rgbValues[i + (2 * i)];
+                int g = rgbValues[i + (2 * i) + 1];
+                int b = rgbValues[i + (2 * i) + 2];
+
+                if (r > 250 && g > 250 && b > 250)
+                {
+                    ValueWhite += 1;
+                }
+                else if (r < 75 && g < 75 && b < 75)
+                {
+                    ValueBlack += 1;
+                }
             }
-                // AANPASSEN
+            if (ValueWhite > ValueBlack)
+            {
                 return 0;
+            }
+            else if (ValueBlack < ValueWhite) {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
         }
 
-        private void convertToQRCode()
+        private int getCode(ArrayList arrayQRCode)
         {
-
-        }
-
-        private String getCode()
-        {
-
-            return null;
+            return Codes.getCode(arrayQRCode);
         }
 
         private void unlockBits()
