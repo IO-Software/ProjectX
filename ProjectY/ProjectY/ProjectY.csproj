@@ -70,11 +70,14 @@
     <Compile Include="BlobExtractor.cs" />
     <Compile Include="Codes.cs" />
     <Compile Include="CodeScanner.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RandomClass.cs" />
+    <Compile Include="Wall.cs" />
     <Compile Include="Webcam.cs" />
     <Compile Include="Filter.cs" />
     <Compile Include="Window.cs">
@@ -107,10 +110,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="QRCodes\cannon.txt" />
+    <EmbeddedResource Include="QRCodes\player1.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="QRCodes\player2.txt" />
+    <EmbeddedResource Include="QRCodes\wall.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -37,6 +37,7 @@ namespace ProjectY
             }
             cboxWebcams.SelectedIndex = 0;
             webcam = new Webcam(pboxStream);
+            webcam.testing(pboxTest);
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -64,11 +65,6 @@ namespace ProjectY
             {
                 webcam.stop();
             }
-        }
-
-        private void btnTest_Click(object sender, EventArgs e)
-        {
-            webcam.test(pboxTest, pBoxTest2);
         }
     }
 }

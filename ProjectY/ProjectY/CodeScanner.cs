@@ -1,115 +1,185 @@
-﻿using AForge.Imaging.Filters;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjectY
 {
-    // BRON: http://msdn.microsoft.com/en-us/library/5ey6h79d(v=vs.110).aspx
-
     class CodeScanner
     {
+        private Bitmap streamImage;
+        Boolean rotate;
+        int amountOfRotation;
+        private int imageHeight;
+
         public CodeScanner()
         {
 
         }
 
-        public String scan(Bitmap image)
+        public string scan(Bitmap stream)
         {
-            ArrayList croppedImages = convertToCroppedImages(image);
-            ArrayList arrayQRCode = lockAndReadBits(croppedImages);
-            int code = getCode(arrayQRCode);
-            unlockBits();
-            // AANPASSEN
-            return null;
+            this.streamImage = stream;
+            imageHeight = stream.Height;
+            String code = null;
+            amountOfRotation = 0;
+            rotate = false;
+            if (determineQR())
+            {
+                ArrayList qrCode = determineCode();
+                if (rotate)
+                {
+                    
+                    qrCode = rotateQR(qrCode);
+                }
+                code = Codes.getCode(qrCode);
+            }
+            return code;
         }
 
-        private ArrayList convertToCroppedImages(Bitmap source)
+        private ArrayList rotateQR(ArrayList qrCode)
         {
-            ArrayList croppedImages = new ArrayList();
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < amountOfRotation; i++)
             {
-                for (int j = 0; j < 2; j++)
-                {
-                    // Deelt de bitmap in negen (3x3)
-                    Crop crop = new Crop(new Rectangle((source.Width / 3) * i, (source.Height / 3) * j, source.Width / 3, source.Height / 3));
-                    croppedImages.Add(crop.Apply(source));
-                }
+                int temp = (int)qrCode[2];
+                qrCode[2] = qrCode[1];
+                qrCode[1] = qrCode[0];
+                qrCode[0] = qrCode[3];
+                qrCode[3] = temp;     
             }
-            return croppedImages;
+            String temp2 = "";
+            for (int i = 0; i < 4; i++)
+            {
+                temp2 = temp2 + qrCode[i] + ";";
+            }
+            return qrCode;
         }
 
-        private ArrayList lockAndReadBits(ArrayList croppedImages)
+        private Boolean determineQR()
         {
-            ArrayList arrayQRCode = new ArrayList();
-            foreach (Bitmap crop in croppedImages)
+            ArrayList arrayQR = new ArrayList();
+            arrayQR.Add(determineColor((int)(imageHeight / 12) * 2, (int)(imageHeight / 12) * 2));
+            arrayQR.Add(determineColor((int)(imageHeight / 12) * 10, (int)(imageHeight / 12) * 2));
+            arrayQR.Add(determineColor((int)(imageHeight / 12) * 2, (int)(imageHeight / 12) * 10));
+            arrayQR.Add(determineColor((int)(imageHeight / 12) * 10, (int)(imageHeight / 12) * 10));
+            arrayQR.Add(determineColor((int)(imageHeight / 12) * 6, (int)(imageHeight / 12) * 6));
+
+            // Wanneer er één van de zwarte vlakken niet duidelijk is (oftwel, 2)
+            for (int i = 0; i < arrayQR.Count; i++)
             {
-                // Lock the bitmap bits
-                Rectangle rect = new Rectangle(0, 0, crop.Width, crop.Height);
-                System.Drawing.Imaging.BitmapData cropData = crop.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly, crop.PixelFormat);
-
-                // Get the address of the first line
-                IntPtr ptr = cropData.Scan0;
-
-                // Declare an array to hold the bytes of the bitmap
-                int bytes = Math.Abs(cropData.Stride) * crop.Height;
-                byte[] rgbValues = new byte[bytes];
-
-                // Copy the RGB values into the array
-                System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-                // Add the corresponding Colorvalue of the rgbvalue to the QRCode array
-                arrayQRCode.Add(determineColor(rgbValues, bytes));
+                if ((int)arrayQR[i] == 2)
+                {
+                    Console.WriteLine("invalid operation: er zit een #2 in");
+                    return false;
+                }
             }
-            return arrayQRCode;
+
+            // Wanneer de middelste niet zwart is return false
+            if ((int)arrayQR[4] == 0)
+            {
+                Console.WriteLine("invalid operation: #4 == 0");
+                return false;
+            }
+
+            // Wanneer er geen drie zwarte vlakjes zijn return false
+            if (!threeBlackSquares(arrayQR))
+            {
+                Console.WriteLine("invalid operation: black #<3");
+                return false;
+            }
+
+            determineRotation(arrayQR);
+            return true;
         }
 
-        private int determineColor(byte[] rgbValues, int rgbValueCount)
+        private void determineRotation(ArrayList arrayQR)
         {
-            int ValueBlack = 0;
-            int ValueWhite = 0;
-            for (int i = 0; i < rgbValueCount; i++)
+            if ((int)arrayQR[2] == 0)
             {
-                // Per pixel zijn er 3 int waardes die interesssant zijn (i + (2*i) + 0, 1 of 2). De RGB waardes moeten nog worden getest.
-                int r = rgbValues[i + (2 * i)];
-                int g = rgbValues[i + (2 * i) + 1];
-                int b = rgbValues[i + (2 * i) + 2];
+                rotate = true;
+                amountOfRotation = 1;
+            }
+            else if ((int)arrayQR[1] == 0)
+            {
+                rotate = true;
+                amountOfRotation = 3;
+            }
+            else if ((int)arrayQR[0] == 0)
+            {
+                rotate = true;
+                amountOfRotation = 2;
+            }
+        }
 
-                if (r > 250 && g > 250 && b > 250)
+        private Boolean threeBlackSquares(ArrayList arrayQR)
+        {
+            int amountBlackSquares = 0;
+            for (int i = 0; i < arrayQR.Count - 1; i++)
+            {
+                if ((int)arrayQR[i] == 1)
                 {
-                    ValueWhite += 1;
-                }
-                else if (r < 75 && g < 75 && b < 75)
-                {
-                    ValueBlack += 1;
+                    amountBlackSquares += 1;
                 }
             }
-            if (ValueWhite > ValueBlack)
+            if (amountBlackSquares == 3)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private ArrayList determineCode()
+        {
+            ArrayList arrayCode = new ArrayList();
+            arrayCode.Add(determineColor((int)(imageHeight / 12) * 6, (int)(imageHeight / 12) * 4));
+            arrayCode.Add(determineColor((int)(imageHeight / 12) * 8, (int)(imageHeight / 12) * 6));
+            arrayCode.Add(determineColor((int)(imageHeight / 12) * 6, (int)(imageHeight / 12) * 8));
+            arrayCode.Add(determineColor((int)(imageHeight / 12) * 4, (int)(imageHeight / 12) * 6));
+            return arrayCode;
+        }
+
+        private int determineColor(int x, int y)
+        {
+            int colorValue = 0;
+            try
+            {
+                for (int i = -1; i < 2; i++)
+                {
+                    for (int j = -1; j < 2; j++)
+                    {
+                        Color pixelColor = streamImage.GetPixel(x + i, y + j);
+                        if (pixelColor.R > 175 && pixelColor.G > 175 && pixelColor.B > 175)
+                        {
+                            colorValue = colorValue - 1;
+                        }
+                        else
+                        {
+                            colorValue = colorValue + 1;
+                        }
+                    }
+                }
+            }
+            catch (InvalidOperationException e) 
+            {
+                Console.WriteLine("Fout opgetreden bij het lezen van de pixels. Niet enorm erg, lost zichzelf op");
+                Console.WriteLine(e.StackTrace);
+            }
+            if (colorValue > 0)
+            {
+                return 1;
+            }
+            else if (colorValue < 0)
             {
                 return 0;
             }
-            else if (ValueBlack < ValueWhite) {
-                return 1;
-            }
             else
             {
+                Console.WriteLine("INVALID WAARDE");
                 return 2;
             }
-        }
-
-        private int getCode(ArrayList arrayQRCode)
-        {
-            return Codes.getCode(arrayQRCode);
-        }
-
-        private void unlockBits()
-        {
-
         }
     }
 }

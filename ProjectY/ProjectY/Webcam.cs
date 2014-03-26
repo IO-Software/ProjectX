@@ -11,6 +11,7 @@ using AForge;
 using AForge.Video.DirectShow;
 using AForge.Video;
 using AForge.Imaging.Filters;
+using System.Diagnostics;
 
 namespace ProjectY
 {
@@ -23,8 +24,10 @@ namespace ProjectY
         private VideoCaptureDevice videoSource;
         private QuadrilateralTransformation quadTransformation;
         private CodeScanner codeScanner;
-        private String recognition;
-        private Bitmap testImage;
+
+        //TEST
+        private PictureBox testBox;
+        private Pen pen = new Pen(Color.Red, 2);
 
         public Webcam(PictureBox pboxStream)
         {
@@ -37,6 +40,7 @@ namespace ProjectY
             filter = new Filter();
             blobExtractor = new BlobExtractor();
             videoSource = new VideoCaptureDevice();
+            codeScanner = new CodeScanner();
         }
 
         public void setVideoSource(String source)
@@ -71,10 +75,15 @@ namespace ProjectY
         {
             try
             {
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+
                 Bitmap stream = (Bitmap)eventArgs.Frame.Clone();
                 Bitmap streamAnalysis = filter.applyFilter(stream);
-                analyseImage(blobExtractor.extractBlob(streamAnalysis), streamAnalysis);
+                analyseImage(blobExtractor.extractBlob(streamAnalysis), stream);
                 pboxStream.Image = stream;
+                stopWatch.Stop();
+                Console.WriteLine("Elapsed Milliseconds: " + stopWatch.ElapsedMilliseconds);
             }
             catch (InvalidOperationException e)
             {
@@ -87,28 +96,44 @@ namespace ProjectY
             try
             {
                 ArrayList blobImages = new ArrayList();
-
                 // Zorgt er voor dat het gedeelte van het plaatje dat wordt aangegeven in de blob uit de image wordt gesneden en kan worden geanalyseerd. Daarna wordt deze in een array gestopt van plaatjes
                 if (cornerPoints.Count > 0)
                 {
                     foreach (List<IntPoint> corners in cornerPoints)
                     {
-                        quadTransformation = new QuadrilateralTransformation(corners, 50, 50);
+                        quadTransformation = new QuadrilateralTransformation(corners, 150, 150);
                         blobImages.Add(quadTransformation.Apply(stream));
                     }
 
-                    if (blobImages[0] != null)
+                    // TEST --------------------------------------------------
+                    if (blobImages.Count > 0 && blobImages[0] != null)
                     {
-                        testImage = (Bitmap) blobImages[0];
+                        testBox.Image = (Bitmap)blobImages[0];
                     }
+                    else
+                    {
+                        testBox.Image = null;
+                        testBox.Invalidate();
+                    }
+                    // --------------------------------------------------------
 
                     // Voor elke image in de image array van de blobs wordt een scanner overheen gegooid om te kijken of dit een code is die we kunnen gebruiken en om deze dan ook meteen te identificeren.
-                    foreach (Bitmap imageAnalysis in blobImages)
+                    if (blobImages.Count > 0)
                     {
-                        //recognition = codeScanner.scan(imageAnalysis);
-                        if (recognition != null)
+                        foreach (Bitmap imageAnalysis in blobImages)
                         {
-                            // VOEG AL DE INFO BIJ ELKAAR
+                            string recognition = null;
+                            if (imageAnalysis != null)
+                            {
+                                recognition = codeScanner.scan(imageAnalysis);
+                                if (recognition != null)
+                                {
+                                    if (recognition.Equals("player1"))
+                                    {
+                                        Console.WriteLine("YAAAAAAAAAAAAAAAAAAY");
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -119,10 +144,9 @@ namespace ProjectY
             }
         }
 
-        public void test(PictureBox test, PictureBox test2)
+        public void testing(PictureBox testBox)
         {
-            test2.Image = testImage;
-            test.Image = filter.applyFilter(testImage);
+            this.testBox = testBox;
         }
     }
 }

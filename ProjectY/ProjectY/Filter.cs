@@ -26,7 +26,11 @@ namespace ProjectY
 
         public Bitmap applyFilter(Bitmap image)
         {
-            return filter.Apply(image);
+            if (image != null)
+            {
+                return filter.Apply(image);
+            }
+            return null;
         }
     }
 }
