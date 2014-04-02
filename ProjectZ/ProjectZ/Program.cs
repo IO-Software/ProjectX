@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ProjectY
+namespace ProjectZ
 {
     static class Program
     {
@@ -14,20 +14,11 @@ namespace ProjectY
         [STAThread]
         static void Main()
         {
-            loadCodes();
-            loadPointConverter();
+            Codes codes = new Codes();
+            PointConverter pointConverter = new PointConverter();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Window());
-        }
-
-        public static void loadCodes() {
-            Codes loadedCodes = new Codes();
-        }
-
-        public static void loadPointConverter()
-        {
-            PointConverter pointConverter = new PointConverter();
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 
-namespace ProjectY
+namespace ProjectZ
 {
     public class Codes
     {
@@ -48,8 +48,7 @@ namespace ProjectY
                     }
                     if (compare)
                     {
-                        //Console.WriteLine("VALUE VAN OBJECT: " + (int)QRCodesValues[i]);
-                        return (int) QRCodesValues[i];
+                        return (int)QRCodesValues[i];
                     }
                 }
             }
@@ -62,7 +61,7 @@ namespace ProjectY
             try
             {
                 ArrayList code = new ArrayList();
-                reader = new StreamReader(assembly.GetManifestResourceStream("ProjectY.QRCodes." + fileName + ".txt"));
+                reader = new StreamReader(assembly.GetManifestResourceStream("ProjectZ.QRCodes." + fileName + ".txt"));
                 String line = reader.ReadLine();
                 int name;
                 int.TryParse(line, out name);

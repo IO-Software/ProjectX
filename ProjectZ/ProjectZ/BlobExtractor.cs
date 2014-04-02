@@ -9,16 +9,13 @@ using AForge.Imaging;
 using AForge;
 using AForge.Math.Geometry;
 
-namespace ProjectY
+namespace ProjectZ
 {
     class BlobExtractor
     {
         private BlobCounter extractor;
-        private int blobMin = 18;
-        private int blobMax = 80;
-        private int imageWidth;
-        private int imageHeight;
-        private Boolean widthHeightCheck = false;
+        private const int blobMin = 10;
+        private const int blobMax = 150;
 
         public BlobExtractor()
         {
@@ -35,12 +32,6 @@ namespace ProjectY
 
         public ArrayList extractBlob(Bitmap image)
         {
-            if (!widthHeightCheck)
-            {
-                this.imageHeight = image.Height;
-                this.imageWidth = image.Width;
-                widthHeightCheck = true;
-            }
             ArrayList cornerPoints = new ArrayList();
             extractor.ProcessImage(image);
             foreach (Blob blob in extractor.GetObjectsInformation())
@@ -63,7 +54,6 @@ namespace ProjectY
                     }
                 }
             }
-            //Console.WriteLine("AANTAL HERKENDE OBJECTEN: " + cornerPoints.Count);
             return cornerPoints;
         }
 

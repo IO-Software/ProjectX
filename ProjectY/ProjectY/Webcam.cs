@@ -24,15 +24,22 @@ namespace ProjectY
         private VideoCaptureDevice videoSource;
         private QuadrilateralTransformation quadTransformation;
         private CodeScanner codeScanner;
+        private Player player1;
+        private Player player2;
+        private ArrayList visibleObjects;
+
+        private const int PLAYER1 = 1;
+        private const int PLAYER2 = 2;
+        private const int WALL = 3;
 
         //TEST
         private PictureBox testBox;
-        private Pen pen = new Pen(Color.Red, 2);
 
         public Webcam(PictureBox pboxStream)
         {
             this.pboxStream = pboxStream;
             Initialize();
+            InitializeObjects();
         }
 
         private void Initialize()
@@ -41,6 +48,15 @@ namespace ProjectY
             blobExtractor = new BlobExtractor();
             videoSource = new VideoCaptureDevice();
             codeScanner = new CodeScanner();
+            visibleObjects = new ArrayList();
+        }
+
+        private void InitializeObjects()
+        {
+            player1 = new Player(1);
+            player2 = new Player(2);
+            visibleObjects.Add(player1);
+            visibleObjects.Add(player2);
         }
 
         public void setVideoSource(String source)
@@ -81,7 +97,10 @@ namespace ProjectY
                 Bitmap stream = (Bitmap)eventArgs.Frame.Clone();
                 Bitmap streamAnalysis = filter.applyFilter(stream);
                 analyseImage(blobExtractor.extractBlob(streamAnalysis), stream);
-                pboxStream.Image = stream;
+
+                Bitmap drawnStream = draw(stream);
+                pboxStream.Image = drawnStream;
+
                 stopWatch.Stop();
                 Console.WriteLine("Elapsed Milliseconds: " + stopWatch.ElapsedMilliseconds);
             }
@@ -91,51 +110,44 @@ namespace ProjectY
             }
         }
 
+        private Bitmap draw(Bitmap image)
+        {
+            Bitmap drawnImage = image;
+            foreach (VisibleObject obj in visibleObjects)
+            {
+                drawnImage = obj.draw(drawnImage);
+            }
+            return drawnImage;
+        }
+
         private void analyseImage(ArrayList cornerPoints, Bitmap stream)
         {
             try
             {
                 ArrayList blobImages = new ArrayList();
-                // Zorgt er voor dat het gedeelte van het plaatje dat wordt aangegeven in de blob uit de image wordt gesneden en kan worden geanalyseerd. Daarna wordt deze in een array gestopt van plaatjes
                 if (cornerPoints.Count > 0)
                 {
                     foreach (List<IntPoint> corners in cornerPoints)
                     {
+                        //Console.WriteLine(corners.Count);
+                        //foreach (IntPoint point in corners)
+                        //{
+                        //    Console.WriteLine(point);
+                        //}
+
                         quadTransformation = new QuadrilateralTransformation(corners, 150, 150);
-                        blobImages.Add(quadTransformation.Apply(stream));
-                    }
-
-                    // TEST --------------------------------------------------
-                    if (blobImages.Count > 0 && blobImages[0] != null)
-                    {
-                        testBox.Image = (Bitmap)blobImages[0];
-                    }
-                    else
-                    {
-                        testBox.Image = null;
-                        testBox.Invalidate();
-                    }
-                    // --------------------------------------------------------
-
-                    // Voor elke image in de image array van de blobs wordt een scanner overheen gegooid om te kijken of dit een code is die we kunnen gebruiken en om deze dan ook meteen te identificeren.
-                    if (blobImages.Count > 0)
-                    {
-                        foreach (Bitmap imageAnalysis in blobImages)
+                        Bitmap imageAnalysis = quadTransformation.Apply(stream);
+                        int cardValue = -1;
+                        if (imageAnalysis != null)
                         {
-                            string recognition = null;
-                            if (imageAnalysis != null)
+                            cardValue = codeScanner.scan(imageAnalysis);
+                            if (cardValue != -1)
                             {
-                                recognition = codeScanner.scan(imageAnalysis);
-                                if (recognition != null)
-                                {
-                                    if (recognition.Equals("player1"))
-                                    {
-                                        Console.WriteLine("YAAAAAAAAAAAAAAAAAAY");
-                                    }
-                                }
+                                recognize(cardValue, corners);
                             }
                         }
                     }
+                    Console.WriteLine("Blobcount: " + cornerPoints.Count);
                 }
             }
             catch (Exception e)
@@ -147,6 +159,28 @@ namespace ProjectY
         public void testing(PictureBox testBox)
         {
             this.testBox = testBox;
+        }
+
+        private void recognize(int cardValue, List<IntPoint> corners)
+        {
+            switch (cardValue)
+            {
+                case PLAYER1:
+                    player1.updatePosition(corners);
+                    break;
+                case PLAYER2:
+                    player2.updatePosition(corners);
+                    break;
+
+                case WALL:
+                    // NOG NIETS
+                    break;
+
+                default:
+                    Console.WriteLine("Default, no action taken");
+                    break;
+                    
+            }
         }
     }
 }

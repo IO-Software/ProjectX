@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectY
+namespace ProjectZ
 {
     class CodeScanner
     {
@@ -15,10 +15,7 @@ namespace ProjectY
         int amountOfRotation;
         private int imageHeight;
 
-        public CodeScanner()
-        {
-
-        }
+        public CodeScanner() {}
 
         public int scan(Bitmap stream)
         {
@@ -32,7 +29,7 @@ namespace ProjectY
                 ArrayList qrCode = determineCode();
                 if (rotate)
                 {
-                    
+
                     qrCode = rotateQR(qrCode);
                 }
                 code = Codes.getCode(qrCode);
@@ -48,12 +45,7 @@ namespace ProjectY
                 qrCode[2] = qrCode[1];
                 qrCode[1] = qrCode[0];
                 qrCode[0] = qrCode[3];
-                qrCode[3] = temp;     
-            }
-            String temp2 = "";
-            for (int i = 0; i < 4; i++)
-            {
-                temp2 = temp2 + qrCode[i] + ";";
+                qrCode[3] = temp;
             }
             return qrCode;
         }
@@ -162,7 +154,7 @@ namespace ProjectY
                     }
                 }
             }
-            catch (InvalidOperationException e) 
+            catch (InvalidOperationException e)
             {
                 Console.WriteLine("Fout opgetreden bij het lezen van de pixels. Niet enorm erg, lost zichzelf op");
                 Console.WriteLine(e.StackTrace);
