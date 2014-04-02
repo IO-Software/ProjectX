@@ -68,12 +68,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlobExtractor.cs" />
+    <Compile Include="Cannon.cs" />
     <Compile Include="Codes.cs" />
     <Compile Include="CodeScanner.cs" />
     <Compile Include="Filter.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PointConverter.cs" />
     <Compile Include="VisibleObject.cs" />
+    <Compile Include="Wall.cs" />
     <Compile Include="Webcam.cs" />
     <Compile Include="Window.cs">
       <SubType>Form</SubType>

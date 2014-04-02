@@ -23,14 +23,23 @@ namespace ProjectZ
         private BlobExtractor blobExtractor;
         private CodeScanner codeScanner;
         private ArrayList visibleObjects;
+        private ArrayList visibleObjectsCheck;
         private Bitmap streamImage;
         private Bitmap drawArea;
+
         private Player player1;
         private Player player2;
+        private Wall player1Wall;
+        private Wall player2Wall;
+        private Cannon player1Cannon;
+        private Cannon player2Cannon;
 
         private const int PLAYER1 = 1;
         private const int PLAYER2 = 2;
-        private const int WALL = 3;
+        private const int WALLPLAYER1 = 3;
+        private const int WALLPLAYER2 = 4;
+        private const int CANNONPLAYER1 = 5;
+        private const int CANNONPLAYER2 = 6;
 
 
         public Window()
@@ -63,9 +72,11 @@ namespace ProjectZ
         private void InitializePlayers()
         {
             player1 = new Player(1);
-            visibleObjects.Add(player1);
             player2 = new Player(2);
-            visibleObjects.Add(player2);
+            player1Wall = new Wall();
+            player2Wall = new Wall();
+            player1Cannon = new Cannon();
+            player2Cannon = new Cannon();
         }
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
@@ -132,10 +143,7 @@ namespace ProjectZ
                 {
                     foreach (VisibleObject obj in visibleObjects)
                     {
-                        if (obj.canBeDrawn())
-                        {
-                            drawArea = obj.draw(drawArea);
-                        }
+                        drawArea = obj.draw(drawArea);
                     }
                 }
             }
@@ -148,6 +156,7 @@ namespace ProjectZ
         private void analyseImage(ArrayList cornerPoints)
         {
             lblAmountOfBlobs.Text = "Amount of blobs " + cornerPoints.Count;
+            visibleObjectsCheck = new ArrayList();
             foreach (List<IntPoint> corners in cornerPoints)
             {
                 QuadrilateralTransformation quadTransformation = new QuadrilateralTransformation(corners, 150, 150);
@@ -161,7 +170,42 @@ namespace ProjectZ
                         recognize(cardValue, corners);
                     }
                 }
+                
             }
+            updateVisibleObjects();
+            lblAmountVisObj.Text = "Amount of visibleobject = " + visibleObjects.Count;
+            lblAmountVisObjCheck.Text = "Amount of visibleobjectscheck = " + visibleObjectsCheck.Count;
+        }
+
+        private void updateVisibleObjects()
+        {
+            for (int i = 0; i < visibleObjects.Count; i++)
+            {
+                if (!contains(visibleObjects[i], visibleObjectsCheck))
+                {
+                    visibleObjects.Remove(visibleObjects[i]);
+                }
+            }
+            for (int j = 0; j < visibleObjectsCheck.Count; j++)
+            {
+                if (!contains(visibleObjectsCheck[j], visibleObjects))
+                {
+                    visibleObjects.Add(visibleObjectsCheck[j]);
+                }
+            }
+            
+        }
+
+        private Boolean contains(Object obj, ArrayList objectList)
+        {
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                if (objectList[i].Equals(obj))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void recognize(int cardValue, List<IntPoint> corners)
@@ -170,19 +214,57 @@ namespace ProjectZ
             {
                 case PLAYER1:
                     player1.updatePosition(corners);
+                    visibleObjectsCheck.Add(player1);
                     break;
                 case PLAYER2:
                     player2.updatePosition(corners);
+                    visibleObjectsCheck.Add(player2);
                     break;
 
-                case WALL:
-                    // NOG NIETS
+                case WALLPLAYER1:
+                    player1Wall.updatePosition(corners);
+                    visibleObjectsCheck.Add(player1Wall);
+                    break;
+
+                case WALLPLAYER2:
+                    player2Wall.updatePosition(corners);
+                    visibleObjectsCheck.Add(player2Wall);
+                    break;
+
+                case CANNONPLAYER1:
+                    player1Cannon.updatePosition(corners);
+                    visibleObjectsCheck.Add(player1Cannon);
+                    break;
+
+                case CANNONPLAYER2:
+                    player2Cannon.updatePosition(corners);
+                    visibleObjectsCheck.Add(player2Cannon);
                     break;
 
                 default:
-                    Console.WriteLine("Default, no action taken");
+                    Console.WriteLine("Default option, no action taken");
                     break;
+            }
+        }
 
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            ArrayList testing = new ArrayList();
+            testing.Add(player1);
+            testing.Add(player2);
+            testing.Add(player1Wall);
+            testing.Add(player2Wall);
+
+            for (int i = 0; i < testing.Count; i++)
+            {
+                if (testing[i].Equals(player2))
+                {
+                    Console.WriteLine("Player 2 gevonden in lijst");
+                }
+                else
+                {
+                    Console.WriteLine("Geen player 2 gevonden in lijst");
+                }
             }
         }
     }

@@ -10,6 +10,5 @@ namespace ProjectZ
     interface VisibleObject
     {
         Bitmap draw(Bitmap image);
-        Boolean canBeDrawn();
     }
 }

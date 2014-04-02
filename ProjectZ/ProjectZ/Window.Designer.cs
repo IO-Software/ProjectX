@@ -38,8 +38,9 @@
             this.pboxTest2 = new System.Windows.Forms.PictureBox();
             this.lblAmountOfBlobs = new System.Windows.Forms.Label();
             this.lblElapsedTime = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lblAmountVisObj = new System.Windows.Forms.Label();
+            this.lblAmountVisObjCheck = new System.Windows.Forms.Label();
+            this.btnTest = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pboxStream)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxTest)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxTest2)).BeginInit();
@@ -123,31 +124,42 @@
             this.lblElapsedTime.TabIndex = 8;
             this.lblElapsedTime.Text = "Elapsed Time";
             // 
-            // label3
+            // lblAmountVisObj
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 449);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "label3";
+            this.lblAmountVisObj.AutoSize = true;
+            this.lblAmountVisObj.Location = new System.Drawing.Point(12, 449);
+            this.lblAmountVisObj.Name = "lblAmountVisObj";
+            this.lblAmountVisObj.Size = new System.Drawing.Size(121, 13);
+            this.lblAmountVisObj.TabIndex = 9;
+            this.lblAmountVisObj.Text = "Amount of visibleobjects";
             // 
-            // label4
+            // lblAmountVisObjCheck
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 474);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "label4";
+            this.lblAmountVisObjCheck.AutoSize = true;
+            this.lblAmountVisObjCheck.Location = new System.Drawing.Point(12, 474);
+            this.lblAmountVisObjCheck.Name = "lblAmountVisObjCheck";
+            this.lblAmountVisObjCheck.Size = new System.Drawing.Size(154, 13);
+            this.lblAmountVisObjCheck.TabIndex = 10;
+            this.lblAmountVisObjCheck.Text = "Amount of visibleobjects check";
+            // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(174, 358);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(75, 23);
+            this.btnTest.TabIndex = 11;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1091, 542);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.btnTest);
+            this.Controls.Add(this.lblAmountVisObjCheck);
+            this.Controls.Add(this.lblAmountVisObj);
             this.Controls.Add(this.lblElapsedTime);
             this.Controls.Add(this.lblAmountOfBlobs);
             this.Controls.Add(this.pboxTest2);
@@ -178,8 +190,9 @@
         private System.Windows.Forms.PictureBox pboxTest2;
         private System.Windows.Forms.Label lblAmountOfBlobs;
         private System.Windows.Forms.Label lblElapsedTime;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblAmountVisObj;
+        private System.Windows.Forms.Label lblAmountVisObjCheck;
+        private System.Windows.Forms.Button btnTest;
     }
 }
 

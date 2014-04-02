@@ -62,14 +62,5 @@ namespace ProjectZ
             }
             return image;
         }
-
-        public Boolean canBeDrawn()
-        {
-            if (pos1 != null && pos2 != null && pos3 != null && pos4 != null)
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }
