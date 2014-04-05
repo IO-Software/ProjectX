@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C00829CB-53CC-4826-B712-6522AAA8EC6E}</ProjectGuid>
+    <ProjectGuid>{225373D9-9AA9-446B-93C8-1B3CE7A6BEB1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProjectZ</RootNamespace>
-    <AssemblyName>ProjectZ</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>Lijn_intersectie</RootNamespace>
+    <AssemblyName>Lijn intersectie</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,27 +32,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\AForge.NET\Framework\Release\AForge.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Imaging, Version=2.2.5.0, Culture=neutral, PublicKeyToken=ba8ddea9676ca48b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\AForge.NET\Framework\Release\AForge.Imaging.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Math, Version=2.2.5.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\AForge.NET\Framework\Release\AForge.Math.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\AForge.NET\Framework\Release\AForge.Video.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\AForge.NET\Framework\Release\AForge.Video.DirectShow.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,43 +49,21 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="zxing">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\zXing.net\zxing.dll</HintPath>
-    </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
-    <Compile Include="BlobExtractor.cs" />
-    <Compile Include="Cannon.cs" />
-    <Compile Include="Codes.cs" />
-    <Compile Include="CodeScanner.cs" />
-    <Compile Include="Edge.cs" />
-    <Compile Include="EdgeKeeper.cs" />
-    <Compile Include="Filter.cs" />
-    <Compile Include="GameWindow.cs">
+    <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GameWindow.Designer.cs">
-      <DependentUpon>GameWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Player.cs" />
-    <Compile Include="PointConverter.cs" />
-    <Compile Include="VisibleObject.cs" />
-    <Compile Include="Wall.cs" />
-    <Compile Include="Webcam.cs" />
-    <Compile Include="Window.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Window.Designer.cs">
-      <DependentUpon>Window.cs</DependentUpon>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="GameWindow.resx">
-      <DependentUpon>GameWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Window.resx">
-      <DependentUpon>Window.cs</DependentUpon>
+    <Compile Include="Wall.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -108,6 +73,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -123,12 +89,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="QRCodes\player1.txt" />
-    <EmbeddedResource Include="QRCodes\player2.txt" />
-    <EmbeddedResource Include="QRCodes\wall.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Textures\" />
+    <None Include="Resources\Background.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

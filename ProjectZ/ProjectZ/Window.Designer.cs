@@ -144,7 +144,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(174, 358);
+            this.btnTest.Location = new System.Drawing.Point(174, 359);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(75, 23);
             this.btnTest.TabIndex = 11;

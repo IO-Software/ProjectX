@@ -61,12 +61,20 @@ namespace ProjectZ
 
         public int getHeight()
         {
-            return stream.Height;
+            if (stream != null)
+            {
+                return stream.Height;
+            }
+            return 0;
         }
 
         public int getWidth()
         {
-            return stream.Width;
+            if (stream != null)
+            {
+                return stream.Width;
+            }
+            return 0;
         }
     }
 }

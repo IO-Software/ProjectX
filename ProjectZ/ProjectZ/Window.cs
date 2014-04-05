@@ -23,7 +23,6 @@ namespace ProjectZ
         private BlobExtractor blobExtractor;
         private CodeScanner codeScanner;
         private ArrayList visibleObjects;
-        private ArrayList visibleObjectsCheck;
         private Bitmap streamImage;
         private Bitmap drawArea;
 
@@ -33,6 +32,12 @@ namespace ProjectZ
         private Wall player2Wall;
         private Cannon player1Cannon;
         private Cannon player2Cannon;
+        private Edge edgeUp;
+        private Edge edgeDown;
+        private Edge edgeRightTop;
+        private Edge edgeRightBottom;
+        private Edge edgeLeftTop;
+        private Edge edgeLeftBottom;
 
         private const int PLAYER1 = 1;
         private const int PLAYER2 = 2;
@@ -46,16 +51,15 @@ namespace ProjectZ
         {
             InitializeComponent();
             InitializeWebcams();
-            InitializeSecondaryComponents();
-            InitializePlayers();
+            InitializeCardRecognitionComponents();
+            InitializeFieldComponents();
         }
 
-        private void InitializeSecondaryComponents()
+        private void InitializeCardRecognitionComponents()
         {
             filter = new Filter();
             blobExtractor = new BlobExtractor();
             codeScanner = new CodeScanner();
-            visibleObjects = new ArrayList();
         }
 
         private void InitializeWebcams()
@@ -69,14 +73,28 @@ namespace ProjectZ
             webcam = new Webcam();
         }
 
-        private void InitializePlayers()
+        private void InitializeFieldComponents()
         {
             player1 = new Player(1);
             player2 = new Player(2);
+            // Wall en Cannon worden (nog) niet gebruikt
             player1Wall = new Wall();
             player2Wall = new Wall();
             player1Cannon = new Cannon();
             player2Cannon = new Cannon();
+
+            edgeUp = new Edge(new IntPoint(92, 0), new IntPoint(548, 0));
+            EdgeKeeper.addEdge(edgeUp);
+            edgeDown = new Edge(new IntPoint(0, 480), new IntPoint(640, 480));
+            EdgeKeeper.addEdge(edgeDown);
+            edgeLeftTop = new Edge(new IntPoint(0, 240), new IntPoint(92, 0));
+            EdgeKeeper.addEdge(edgeLeftTop);
+            edgeLeftBottom = new Edge(new IntPoint(0, 240), new IntPoint(0, 480));
+            EdgeKeeper.addEdge(edgeLeftBottom);
+            edgeRightTop = new Edge(new IntPoint(548, 0), new IntPoint(640, 240));
+            EdgeKeeper.addEdge(edgeRightTop);
+            edgeRightBottom = new Edge(new IntPoint(640, 240), new IntPoint(640, 480));
+            EdgeKeeper.addEdge(edgeRightBottom);
         }
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
@@ -118,34 +136,41 @@ namespace ProjectZ
         {
             try
             {
-                drawArea = new Bitmap(webcam.getStreamImage(), webcam.getWidth(), webcam.getHeight());
-                streamImage = webcam.getStreamImage();
-
-                pboxStream.Image = drawArea;
-                pboxTest.Image = streamImage;
-                pboxTest2.Image = filter.applyFilter(streamImage);
-
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                if (streamImage != null)
+                visibleObjects = new ArrayList();
+                int widthCheck = webcam.getWidth();
+                int heightCheck = webcam.getHeight();
+                if (widthCheck != 0 && heightCheck != 0)
                 {
-                    ArrayList cornerPoints = blobExtractor.extractBlob(filter.applyFilter(streamImage));
-                    if (cornerPoints.Count > 0)
+                    drawArea = new Bitmap(webcam.getStreamImage(), widthCheck, heightCheck);
+                    streamImage = webcam.getStreamImage();
+
+                    pboxStream.Image = drawArea;
+                    pboxTest.Image = streamImage;
+                    pboxTest2.Image = filter.applyFilter(streamImage);
+
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
+
+                    if (streamImage != null)
                     {
-                        analyseImage(cornerPoints);
+                        ArrayList cornerPoints = blobExtractor.extractBlob(filter.applyFilter(streamImage));
+                        if (cornerPoints.Count > 0)
+                        {
+                            analyseImage(cornerPoints);
+                        }
+                    }
+                    stopwatch.Stop();
+                    lblElapsedTime.Text = "Elapsed Time: " + stopwatch.ElapsedMilliseconds;
+
+                    if (visibleObjects.Count > 0)
+                    {
+                        foreach (VisibleObject obj in visibleObjects)
+                        {
+                            drawArea = obj.draw(drawArea);
+                        }
                     }
                 }
-                stopwatch.Stop();
-                lblElapsedTime.Text = "Elapsed Time: " + stopwatch.ElapsedMilliseconds;
-
-                if (visibleObjects.Count > 0)
-                {
-                    foreach (VisibleObject obj in visibleObjects)
-                    {
-                        drawArea = obj.draw(drawArea);
-                    }
-                }
+                
             }
             catch (Exception h)
             {
@@ -156,7 +181,6 @@ namespace ProjectZ
         private void analyseImage(ArrayList cornerPoints)
         {
             lblAmountOfBlobs.Text = "Amount of blobs " + cornerPoints.Count;
-            visibleObjectsCheck = new ArrayList();
             foreach (List<IntPoint> corners in cornerPoints)
             {
                 QuadrilateralTransformation quadTransformation = new QuadrilateralTransformation(corners, 150, 150);
@@ -172,28 +196,7 @@ namespace ProjectZ
                 }
                 
             }
-            updateVisibleObjects();
             lblAmountVisObj.Text = "Amount of visibleobject = " + visibleObjects.Count;
-            lblAmountVisObjCheck.Text = "Amount of visibleobjectscheck = " + visibleObjectsCheck.Count;
-        }
-
-        private void updateVisibleObjects()
-        {
-            for (int i = 0; i < visibleObjects.Count; i++)
-            {
-                if (!contains(visibleObjects[i], visibleObjectsCheck))
-                {
-                    visibleObjects.Remove(visibleObjects[i]);
-                }
-            }
-            for (int j = 0; j < visibleObjectsCheck.Count; j++)
-            {
-                if (!contains(visibleObjectsCheck[j], visibleObjects))
-                {
-                    visibleObjects.Add(visibleObjectsCheck[j]);
-                }
-            }
-            
         }
 
         private Boolean contains(Object obj, ArrayList objectList)
@@ -214,31 +217,31 @@ namespace ProjectZ
             {
                 case PLAYER1:
                     player1.updatePosition(corners);
-                    visibleObjectsCheck.Add(player1);
+                    visibleObjects.Add(player1);
                     break;
                 case PLAYER2:
                     player2.updatePosition(corners);
-                    visibleObjectsCheck.Add(player2);
+                    visibleObjects.Add(player2);
                     break;
 
                 case WALLPLAYER1:
                     player1Wall.updatePosition(corners);
-                    visibleObjectsCheck.Add(player1Wall);
+                    visibleObjects.Add(player1Wall);
                     break;
 
                 case WALLPLAYER2:
                     player2Wall.updatePosition(corners);
-                    visibleObjectsCheck.Add(player2Wall);
+                    visibleObjects.Add(player2Wall);
                     break;
 
                 case CANNONPLAYER1:
                     player1Cannon.updatePosition(corners);
-                    visibleObjectsCheck.Add(player1Cannon);
+                    visibleObjects.Add(player1Cannon);
                     break;
 
                 case CANNONPLAYER2:
                     player2Cannon.updatePosition(corners);
-                    visibleObjectsCheck.Add(player2Cannon);
+                    visibleObjects.Add(player2Cannon);
                     break;
 
                 default:
@@ -251,19 +254,19 @@ namespace ProjectZ
         {
             ArrayList testing = new ArrayList();
             testing.Add(player1);
-            testing.Add(player2);
             testing.Add(player1Wall);
+            testing.Add(player2);
             testing.Add(player2Wall);
 
             for (int i = 0; i < testing.Count; i++)
             {
                 if (testing[i].Equals(player2))
                 {
-                    Console.WriteLine("Player 2 gevonden in lijst");
+                    Console.WriteLine("JAA");
                 }
                 else
                 {
-                    Console.WriteLine("Geen player 2 gevonden in lijst");
+                    Console.WriteLine("NEE");
                 }
             }
         }

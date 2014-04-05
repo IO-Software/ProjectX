@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AForge;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace ProjectZ
     interface VisibleObject
     {
         Bitmap draw(Bitmap image);
+        void updatePosition(List<IntPoint> corners);
     }
 }

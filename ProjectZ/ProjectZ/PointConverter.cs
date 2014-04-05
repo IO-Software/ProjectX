@@ -10,8 +10,8 @@ namespace ProjectZ
 {
     class PointConverter
     {
-        public static ArrayList from2Dto3D = new ArrayList();
-        public static ArrayList from3Dto2D = new ArrayList();
+        private static ArrayList from2Dto3D = new ArrayList();
+        private static ArrayList from3Dto2D = new ArrayList();
 
         public PointConverter()
         {
@@ -28,7 +28,7 @@ namespace ProjectZ
                 for (int j = 0; j < 1000; j++)
                 {
                     IntPoint point = new IntPoint(i, j);
-                    IntPoint convertedPoint = naar3D(point);
+                    IntPoint convertedPoint = convert3D(point);
                     from2Dto3Dline.Add(convertedPoint);
                 }
                 from2Dto3D.Add(from2Dto3Dline);
@@ -44,14 +44,14 @@ namespace ProjectZ
                 for (int j = 0; j < 480; j++)
                 {
                     IntPoint point = new IntPoint(i, j);
-                    IntPoint convertedPoint = naar2D(point);
+                    IntPoint convertedPoint = convert2D(point);
                     from3Dto2Dline.Add(convertedPoint);
                 }
                 from3Dto2D.Add(from3Dto2Dline);
             }
         }
 
-        private IntPoint naar2D(IntPoint punt)
+        private IntPoint convert2D(IntPoint punt)
         {
             IntPoint point3D = punt;
             IntPoint point2D = new IntPoint(0, 0);
@@ -62,7 +62,7 @@ namespace ProjectZ
             return point2D;
         }
 
-        private IntPoint naar3D(IntPoint punt)
+        private IntPoint convert3D(IntPoint punt)
         {
             IntPoint point2D = new IntPoint(punt.X - 180, punt.Y - 180);
             IntPoint point3D = new IntPoint(0, 0);

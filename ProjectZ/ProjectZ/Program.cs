@@ -16,9 +16,22 @@ namespace ProjectZ
         {
             Codes codes = new Codes();
             PointConverter pointConverter = new PointConverter();
+            EdgeKeeper edgeKeeper = new EdgeKeeper();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Window());
+            DialogResult debug = MessageBox.Show("Do you want to start debug mode?", "Debugmode?", MessageBoxButtons.YesNoCancel);
+            if (debug == DialogResult.Yes)
+            {
+                Application.Run(new Window());
+            }
+            else if (debug == DialogResult.No)
+            {
+                Application.Run(new GameWindow());
+            }
+            else
+            {
+                Application.Exit();
+            }
         }
     }
 }
