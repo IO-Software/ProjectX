@@ -17,6 +17,8 @@ using System.Windows.Forms;
 // TO-DO
 // - Namen van screen veranderen naar 'screen......'
 // - Lockbitmap gebruiken
+// - Timer zodat na lange tijd niet gebruikt hij weer op intro schermen gaat
+// - Debug, 2D veld laten zien
 namespace ProjectZ
 {
     public partial class GameWindow : Form
@@ -26,7 +28,7 @@ namespace ProjectZ
         private double introSpeed = 1;
         private double fadeIn;
         private double fadeOut;
-        private List<Label> labelList;
+        private List<Label> labelList = new List<Label>();
 
         double firstIntroTimerCount = 0;
         double secondIntroTimerCount = 0;
@@ -40,6 +42,8 @@ namespace ProjectZ
         private const int STATUSHIGHSCORE = 4;
 
         private int status;
+
+        private ArrayList availableCams = new ArrayList();
 
         private double easySpeed = 0.75;
         private double mediumSpeed = 1;
@@ -76,11 +80,12 @@ namespace ProjectZ
         public GameWindow()
         {
             status = STATUSINTRO;
-            labelList = new List<Label>();
+
             InitializeComponent();
             InitializeCanvas();
             InitializeButtons();
             InitializeGameElements();
+
             menuCheckTimer.Enabled = true;
             Intro();
         }
@@ -88,7 +93,6 @@ namespace ProjectZ
         private void InitializeGameElements()
         {
             Console.WriteLine("Init game elements");
-            InitializeComponent();
             InitializeWebcams();
             InitializeCardRecognitionComponents();
             InitializeFieldComponents();
@@ -110,9 +114,8 @@ namespace ProjectZ
             videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             foreach (FilterInfo Device in videoDevices)
             {
-                cboxWebcams.Items.Add(Device.Name);
+                availableCams.Add(Device.Name);
             }
-            cboxWebcams.SelectedIndex = 0;
             webcam = new Webcam();
             Console.WriteLine("ini webcams end");
         }
@@ -220,24 +223,28 @@ namespace ProjectZ
 
         private void startMainMenu()
         {
+            Console.WriteLine("ini timer main menu");
             mainMenuTimer.Interval = Convert.ToInt32(introSpeed);
             mainMenuTimer.Enabled = true;
         }
 
         private void startThirdIntro()
         {
+            Console.WriteLine("ini third intro");
             thirdIntroTimer.Interval = Convert.ToInt32(introSpeed);
             thirdIntroTimer.Enabled = true;
         }
 
         private void startSecondIntro()
         {
+            Console.WriteLine("ini second intro");
             secondIntroTimer.Interval = Convert.ToInt32(introSpeed);
             secondIntroTimer.Enabled = true;
         }
 
         private void startFirstIntro()
         {
+            Console.WriteLine("ini first intro");
             firstIntroTimer.Interval = Convert.ToInt32(introSpeed);
             firstIntroTimer.Enabled = true;
         }
@@ -245,14 +252,12 @@ namespace ProjectZ
         private void firstIntroTick(object sender, EventArgs e)
         {
             firstIntroTimerCount = firstIntroTimerCount + introSpeed;
-            Console.WriteLine(firstIntroTimerCount);
             if (firstIntroTimerCount <= fadeIn) {
                 pBoxGame.Image = ChangeOpacity.change(Textures.getTexture("firstIntroScreen"), (float)((100 / fadeIn) * firstIntroTimerCount) / 100);
             }
             else if (firstIntroTimerCount <= fadeOut && firstIntroTimerCount > fadeIn)
             {
                 float check = (float)(2-((100 / fadeIn) * firstIntroTimerCount) / 100);
-                Console.WriteLine(check);
                 pBoxGame.Image = ChangeOpacity.change(Textures.getTexture("firstIntroScreen"), check);
             }
             else
@@ -374,6 +379,7 @@ namespace ProjectZ
         {
             try
             {
+                Console.WriteLine("DE GAME IS AL BEGONNEN");
                 visibleObjects = new ArrayList();
                 EdgeKeeper.emptyEdges();
 
@@ -502,14 +508,13 @@ namespace ProjectZ
 
         private void startGame()
         {
-            if (!webcam.isRunning())
+            Console.WriteLine("startgame");
+            webcam.setVideoSource(videoDevices[2].MonikerString);
+            if (!webcam.isRunning() && webcam.hasVideoSource())
             {
+                Console.WriteLine("game is ook echt gestart");
                 webcam.turnOn();
                 videoStreamTimer.Enabled = true;
-            }
-            else
-            {
-                
             }
         }
     }

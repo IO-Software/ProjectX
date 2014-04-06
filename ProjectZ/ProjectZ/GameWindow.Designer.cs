@@ -185,6 +185,7 @@ namespace ProjectZ
             // videoStreamTimer
             // 
             this.videoStreamTimer.Interval = 20;
+            this.videoStreamTimer.Tick += new System.EventHandler(this.videoStreamTimer_Tick);
             // 
             // GameWindow
             // 
@@ -218,6 +219,7 @@ namespace ProjectZ
         // ---------------- EVENT HANDLERS ---------------------------------------------------------------------------------
         private void mouseHoverLabel(object sender, System.EventArgs e)
         {
+            Console.WriteLine("BLUE BLUE BLUE");
             Label lbl = (Label)sender;
             lbl.ForeColor = System.Drawing.Color.Blue;
         }

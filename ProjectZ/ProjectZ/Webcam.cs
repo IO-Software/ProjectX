@@ -31,6 +31,15 @@ namespace ProjectZ
             videoSourceString = source;
         }
 
+        public Boolean hasVideoSource()
+        {
+            if (videoSourceString != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public Boolean isRunning()
         {
             return videoSource.IsRunning;
@@ -46,7 +55,6 @@ namespace ProjectZ
             videoSource = new VideoCaptureDevice(videoSourceString);
             videoSource.NewFrame += new NewFrameEventHandler(videoSource_NewFrame);
             videoSource.Start();
-            
         }
 
         private void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)

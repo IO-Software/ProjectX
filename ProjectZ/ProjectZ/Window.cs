@@ -255,31 +255,7 @@ namespace ProjectZ
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            label1.Visible = true;
-            label2.Visible = true;
-            label3.Visible = true;
-            label4.Visible = true;
-
-            label1.AutoSize = false;
-            label2.AutoSize = false;
-            label3.AutoSize = false;
-            label4.AutoSize = false;
-
-            label1.Size = new System.Drawing.Size(256, 62);
-            label2.Size = new System.Drawing.Size(346, 136);
-            label3.Size = new System.Drawing.Size(399, 140);
-            label4.Size = new System.Drawing.Size(262, 65);
-
-            label1.Location = new System.Drawing.Point(337 - (int)label1.Size.Width / 2, 446 - (int)label1.Size.Height / 2);
-            label2.Location = new System.Drawing.Point(337 - (int)label2.Size.Width / 2, 617 - (int)label2.Size.Height / 2);
-            label3.Location = new System.Drawing.Point(1027 - (int)label3.Size.Width / 2, 468 - (int)label3.Size.Height / 2);
-            label4.Location = new System.Drawing.Point(1027 - (int)label4.Size.Width / 2, 644 - (int)label4.Size.Height / 2);
             
-            
-            label1.Image = Textures.getTexture("default");
-
-
-
         }
 
     }
