@@ -26,18 +26,14 @@ namespace ProjectZ
         private Bitmap streamImage;
         private Bitmap drawArea;
 
+        private PlayingField playingField;
         private Player player1;
         private Player player2;
         private Wall player1Wall;
         private Wall player2Wall;
         private Cannon player1Cannon;
         private Cannon player2Cannon;
-        private Edge edgeUp;
-        private Edge edgeDown;
-        private Edge edgeRightTop;
-        private Edge edgeRightBottom;
-        private Edge edgeLeftTop;
-        private Edge edgeLeftBottom;
+        private Ball ball;
 
         private const int PLAYER1 = 1;
         private const int PLAYER2 = 2;
@@ -82,19 +78,9 @@ namespace ProjectZ
             player2Wall = new Wall();
             player1Cannon = new Cannon();
             player2Cannon = new Cannon();
+            ball = new Ball(new IntPoint(100, 100), 45);
 
-            edgeUp = new Edge(new IntPoint(92, 0), new IntPoint(548, 0));
-            EdgeKeeper.addEdge(edgeUp);
-            edgeDown = new Edge(new IntPoint(0, 480), new IntPoint(640, 480));
-            EdgeKeeper.addEdge(edgeDown);
-            edgeLeftTop = new Edge(new IntPoint(0, 240), new IntPoint(92, 0));
-            EdgeKeeper.addEdge(edgeLeftTop);
-            edgeLeftBottom = new Edge(new IntPoint(0, 240), new IntPoint(0, 480));
-            EdgeKeeper.addEdge(edgeLeftBottom);
-            edgeRightTop = new Edge(new IntPoint(548, 0), new IntPoint(640, 240));
-            EdgeKeeper.addEdge(edgeRightTop);
-            edgeRightBottom = new Edge(new IntPoint(640, 240), new IntPoint(640, 480));
-            EdgeKeeper.addEdge(edgeRightBottom);
+            playingField = new PlayingField();
         }
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
@@ -137,6 +123,15 @@ namespace ProjectZ
             try
             {
                 visibleObjects = new ArrayList();
+                EdgeKeeper.emptyEdges();
+
+                // Add ball to visibleobjectlist
+                visibleObjects.Add(ball);
+                visibleObjects.Add(playingField);
+
+                // Add edges of playingfield to keeper
+                playingField.addEdgesToKeeper();
+                
                 int widthCheck = webcam.getWidth();
                 int heightCheck = webcam.getHeight();
                 if (widthCheck != 0 && heightCheck != 0)
@@ -162,11 +157,14 @@ namespace ProjectZ
                     stopwatch.Stop();
                     lblElapsedTime.Text = "Elapsed Time: " + stopwatch.ElapsedMilliseconds;
 
+                    // BALLETJE BEWEGEN
+                    ball.move();
+                    // TEKENEN
                     if (visibleObjects.Count > 0)
                     {
-                        foreach (VisibleObject obj in visibleObjects)
+                        foreach (VisibleObject visObj in visibleObjects)
                         {
-                            drawArea = obj.draw(drawArea);
+                            drawArea = visObj.draw(drawArea);
                         }
                     }
                 }
@@ -194,7 +192,6 @@ namespace ProjectZ
                         recognize(cardValue, corners);
                     }
                 }
-                
             }
             lblAmountVisObj.Text = "Amount of visibleobject = " + visibleObjects.Count;
         }
@@ -218,30 +215,36 @@ namespace ProjectZ
                 case PLAYER1:
                     player1.updatePosition(corners);
                     visibleObjects.Add(player1);
+                    player1.addEdgesToKeeper();
                     break;
                 case PLAYER2:
                     player2.updatePosition(corners);
                     visibleObjects.Add(player2);
+                    player2.addEdgesToKeeper();
                     break;
 
                 case WALLPLAYER1:
                     player1Wall.updatePosition(corners);
                     visibleObjects.Add(player1Wall);
+                    player1Wall.addEdgesToKeeper();
                     break;
 
                 case WALLPLAYER2:
                     player2Wall.updatePosition(corners);
                     visibleObjects.Add(player2Wall);
+                    player2Wall.addEdgesToKeeper();
                     break;
 
                 case CANNONPLAYER1:
                     player1Cannon.updatePosition(corners);
                     visibleObjects.Add(player1Cannon);
+                    player1Cannon.addEdgesToKeeper();
                     break;
 
                 case CANNONPLAYER2:
                     player2Cannon.updatePosition(corners);
                     visibleObjects.Add(player2Cannon);
+                    player2Cannon.addEdgesToKeeper();
                     break;
 
                 default:
@@ -252,23 +255,32 @@ namespace ProjectZ
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            ArrayList testing = new ArrayList();
-            testing.Add(player1);
-            testing.Add(player1Wall);
-            testing.Add(player2);
-            testing.Add(player2Wall);
+            label1.Visible = true;
+            label2.Visible = true;
+            label3.Visible = true;
+            label4.Visible = true;
 
-            for (int i = 0; i < testing.Count; i++)
-            {
-                if (testing[i].Equals(player2))
-                {
-                    Console.WriteLine("JAA");
-                }
-                else
-                {
-                    Console.WriteLine("NEE");
-                }
-            }
+            label1.AutoSize = false;
+            label2.AutoSize = false;
+            label3.AutoSize = false;
+            label4.AutoSize = false;
+
+            label1.Size = new System.Drawing.Size(256, 62);
+            label2.Size = new System.Drawing.Size(346, 136);
+            label3.Size = new System.Drawing.Size(399, 140);
+            label4.Size = new System.Drawing.Size(262, 65);
+
+            label1.Location = new System.Drawing.Point(337 - (int)label1.Size.Width / 2, 446 - (int)label1.Size.Height / 2);
+            label2.Location = new System.Drawing.Point(337 - (int)label2.Size.Width / 2, 617 - (int)label2.Size.Height / 2);
+            label3.Location = new System.Drawing.Point(1027 - (int)label3.Size.Width / 2, 468 - (int)label3.Size.Height / 2);
+            label4.Location = new System.Drawing.Point(1027 - (int)label4.Size.Width / 2, 644 - (int)label4.Size.Height / 2);
+            
+            
+            label1.Image = Textures.getTexture("default");
+
+
+
         }
+
     }
 }

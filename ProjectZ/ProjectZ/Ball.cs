@@ -13,16 +13,27 @@ namespace ProjectZ
         private IntPoint currentPos2D;
         private IntPoint currentPos3D;
 
-        private int speed;
+        private double speed = 5;
         private double angle;
 
-        public Ball(IntPoint startPos)
+        public Ball(IntPoint startPos, double angle)
         {
+            this.angle = angle;
             currentPos3D = startPos;
-            currentPos2D = PointConverter.get2DPoint(startPos);
+            updateCurrentPos2D(startPos);
         }
 
-        bool IsIntersecting(Edge edge)
+        private void updateCurrentPos2D(IntPoint update) 
+        {
+            currentPos2D = PointConverter.get2DPoint(update);
+        }
+
+        private void updateCurrentPos3D(IntPoint update)
+        {
+            currentPos3D = PointConverter.get3DPoint(update);
+        }
+
+        public Boolean detectEdge(Edge edge)
         {
             IntPoint edgePosA = edge.getEdgePointA_2D();
             IntPoint edgePosB = edge.getEdgePointB_2D();
@@ -64,19 +75,70 @@ namespace ProjectZ
 
             currentPos2D.X = Convert.ToInt32(currentPos2D.X + Math.Cos(angle) * speed);
             currentPos2D.Y = Convert.ToInt32(currentPos2D.Y + Math.Sin(angle) * speed);
-            currentPos3D = PointConverter.get3DPoint(currentPos2D);
+            updateCurrentPos3D(currentPos2D);
         }
 
         public Bitmap draw(Bitmap image)
         {
-            // Hier tekenen met de 3D coordinaten!
+            try
+            {
+                using (var graphics = Graphics.FromImage(image))
+                {
+                    System.Drawing.Point currentPosPoint = new System.Drawing.Point(currentPos3D.X, currentPos3D.Y);
+                    Size size = new Size(10,10);
+                    Rectangle rect = new Rectangle(currentPosPoint,size);
+                    graphics.DrawEllipse(new Pen (Color.Purple, 5), rect);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+            
             return image;
         }
 
         public void updatePosition(List<IntPoint> update) 
         {
-            // NOTHING WILL HAPPEN
+            // NOTHING WILL HAPPEN HERE
         }
+
+        public void setSpeedBall(double speed)
+        {
+            this.speed = speed;
+        }
+
+        public void move()
+        {
+            if (!intersects())
+            {
+                Console.WriteLine("Ball alleen verplaatst naar 3D: " + currentPos3D.X + ";" + currentPos3D.Y);
+                Console.WriteLine("Ball alleen verplaatst naar 2D: " + currentPos2D.X + ";" + currentPos2D.Y);
+                currentPos2D.X = Convert.ToInt32(currentPos2D.X + Math.Cos(angle) * speed);
+                currentPos2D.Y = Convert.ToInt32(currentPos2D.Y + Math.Sin(angle) * speed);
+                updateCurrentPos3D(currentPos2D);
+            }
+            else
+            {
+                Console.WriteLine("Ball bounce");
+            }
+        }
+
+        public Boolean intersects()
+        {
+            Boolean intersect = false;
+            foreach (Edge edge in EdgeKeeper.getEdges())
+            {
+                intersect = detectEdge(edge);
+                if (intersect)
+                {
+                    bounce(edge);
+                    return true;
+                }
+            }
+            return false;
+        }
+        
 
     }
 }

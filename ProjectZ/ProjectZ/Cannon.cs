@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProjectZ
 {
-    class Cannon : VisibleObject
+    class Cannon : VisibleObject, ObjectWithEdge
     {
         public Cannon()
         {
@@ -23,6 +23,11 @@ namespace ProjectZ
         public Bitmap draw(Bitmap image)
         {
             return image;
+        }
+
+        public void addEdgesToKeeper()
+        {
+
         }
     }
 }

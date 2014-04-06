@@ -1,5 +1,6 @@
 ﻿using AForge;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProjectZ
 {
-    class Player : VisibleObject
+    class Player : VisibleObject, ObjectWithEdge
     {
         Edge edge1;
         Edge edge2;
@@ -24,6 +25,7 @@ namespace ProjectZ
             edge2 = new Edge(temp, temp);
             edge3 = new Edge(temp, temp);
             edge4 = new Edge(temp, temp);
+
             if (penNo == 1)
             {
                 pen = new Pen(Color.Red, 2);
@@ -63,6 +65,14 @@ namespace ProjectZ
                 }
             }
             return image;
+        }
+
+        public void addEdgesToKeeper()
+        {
+            EdgeKeeper.addEdge(edge1);
+            EdgeKeeper.addEdge(edge2);
+            EdgeKeeper.addEdge(edge3);
+            EdgeKeeper.addEdge(edge4);
         }
     }
 }

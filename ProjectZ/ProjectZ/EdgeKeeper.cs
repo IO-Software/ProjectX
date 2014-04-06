@@ -24,5 +24,10 @@ namespace ProjectZ
         {
             edgeList.Add(edge);
         }
+
+        public static void emptyEdges()
+        {
+            edgeList.Clear();
+        }
     }
 }

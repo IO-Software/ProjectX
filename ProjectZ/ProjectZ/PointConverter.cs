@@ -10,48 +10,48 @@ namespace ProjectZ
 {
     class PointConverter
     {
-        private static ArrayList from2Dto3D = new ArrayList();
-        private static ArrayList from3Dto2D = new ArrayList();
+        private static ArrayList array3D = new ArrayList();
+        private static ArrayList array2D = new ArrayList();
 
         public PointConverter()
         {
-            initialize2Dto3D();
-            initialize3Dto2D();
+            initialize2DArray();
+            initialize3DArray();
         }
 
-        private void initialize2Dto3D()
+        private void initialize2DArray()
         {
             for (int i = 0; i < 1000; i++)
             {
-                ArrayList from2Dto3Dline = new ArrayList();
+                ArrayList array3DLine = new ArrayList();
 
                 for (int j = 0; j < 1000; j++)
                 {
                     IntPoint point = new IntPoint(i, j);
-                    IntPoint convertedPoint = convert3D(point);
-                    from2Dto3Dline.Add(convertedPoint);
+                    IntPoint convertedPoint = convertTo3D(point);
+                    array3DLine.Add(convertedPoint);
                 }
-                from2Dto3D.Add(from2Dto3Dline);
+                array3D.Add(array3DLine);
                 
             }
         }
 
-        private void initialize3Dto2D()
+        private void initialize3DArray()
         {
             for (int i = 0; i < 640; i++)
             {
-                ArrayList from3Dto2Dline = new ArrayList();
+                ArrayList array2DLine = new ArrayList();
                 for (int j = 0; j < 480; j++)
                 {
                     IntPoint point = new IntPoint(i, j);
-                    IntPoint convertedPoint = convert2D(point);
-                    from3Dto2Dline.Add(convertedPoint);
+                    IntPoint convertedPoint = convertTo2D(point);
+                    array2DLine.Add(convertedPoint);
                 }
-                from3Dto2D.Add(from3Dto2Dline);
+                array2D.Add(array2DLine);
             }
         }
 
-        private IntPoint convert2D(IntPoint punt)
+        private IntPoint convertTo2D(IntPoint punt)
         {
             IntPoint point3D = punt;
             IntPoint point2D = new IntPoint(0, 0);
@@ -62,7 +62,7 @@ namespace ProjectZ
             return point2D;
         }
 
-        private IntPoint convert3D(IntPoint punt)
+        private IntPoint convertTo3D(IntPoint punt)
         {
             IntPoint point2D = new IntPoint(punt.X - 180, punt.Y - 180);
             IntPoint point3D = new IntPoint(0, 0);
@@ -74,14 +74,14 @@ namespace ProjectZ
 
         public static IntPoint get3DPoint(IntPoint point)
         {
-            ArrayList from3Dto2Dline = (ArrayList)from3Dto2D[point.X];
+            ArrayList from3Dto2Dline = (ArrayList)array2D[point.X];
             IntPoint newPoint = (IntPoint)from3Dto2Dline[point.Y];
             return newPoint;
         }
 
         public static IntPoint get2DPoint(IntPoint point)
         {
-            ArrayList from2Dto3DLine = (ArrayList)from2Dto3D[point.X];
+            ArrayList from2Dto3DLine = (ArrayList)array3D[point.X];
             IntPoint newPoint = (IntPoint)from2Dto3DLine[point.Y];
             return newPoint;
         }

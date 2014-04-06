@@ -14,24 +14,31 @@ namespace ProjectZ
         [STAThread]
         static void Main()
         {
-            Codes codes = new Codes();
-            PointConverter pointConverter = new PointConverter();
-            EdgeKeeper edgeKeeper = new EdgeKeeper();
+            InitializePrimaryComponents();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            DialogResult debug = MessageBox.Show("Do you want to start debug mode?", "Debugmode?", MessageBoxButtons.YesNoCancel);
+            DialogResult debug = MessageBox.Show("Press YES for PlayMode and press NO for DebugMode", "Mode?", MessageBoxButtons.YesNoCancel);
             if (debug == DialogResult.Yes)
             {
-                Application.Run(new Window());
+                Application.Run(new GameWindow());               
             }
             else if (debug == DialogResult.No)
             {
-                Application.Run(new GameWindow());
+                Application.Run(new Window());
             }
             else
             {
                 Application.Exit();
             }
+        }
+
+        private static void InitializePrimaryComponents()
+        {
+            Codes codes = new Codes();
+            PointConverter pointConverter = new PointConverter();
+            EdgeKeeper edgeKeeper = new EdgeKeeper();
+            Textures texture = new Textures();
         }
     }
 }
