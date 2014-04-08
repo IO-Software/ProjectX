@@ -40,14 +40,26 @@ namespace ProjectZ
         private const int STATUSHOWTOPLAY = 2;
         private const int STATUSSELECTDIFFICULTY = 3;
         private const int STATUSHIGHSCORE = 4;
+        private const int STATUSPAUSE = 5;
+        private const int STATUSEND = 6;
+        private const int STATUSMAINGAME = 7;
 
         private int status;
+        private int gameCounter;
+
+        private Random random = new Random();
+        private int coinFlip;
+        private int PLAYER1COINFLIP = 1;
+        private int PLAYER2COINFLIP = 2;
+
+        private Boolean ballInGame = false;
+        private Boolean lblInGameShow = false;
 
         private ArrayList availableCams = new ArrayList();
 
-        private double easySpeed = 0.75;
-        private double mediumSpeed = 1;
-        private double hardSpeed = 1.25;
+        private double easySpeed = 2;
+        private double mediumSpeed = 3;
+        private double hardSpeed = 10;
 
         private const String diffExplain = "Hier leggen we uit hoe moeilijk moeilijk is";
         private const String highScoreExplain = "Hier leggen we uit dat de Highscore nog niet geïmplementeerd is";
@@ -88,6 +100,7 @@ namespace ProjectZ
 
             menuCheckTimer.Enabled = true;
             Intro();
+            //startMenu();
         }
 
         private void InitializeGameElements()
@@ -112,12 +125,19 @@ namespace ProjectZ
         {
             Console.WriteLine("ini webcams");
             videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            foreach (FilterInfo Device in videoDevices)
-            {
-                availableCams.Add(Device.Name);
-            }
             webcam = new Webcam();
+
+            try
+            {
+                webcam.setVideoSource(videoDevices[2].MonikerString);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                Console.WriteLine("niet de goede webcam gevonden");
+            }
             Console.WriteLine("ini webcams end");
+
         }
 
         private void InitializeFieldComponents()
@@ -150,6 +170,9 @@ namespace ProjectZ
             labelList.Add(lblMedium);
             labelList.Add(lblHard);
             labelList.Add(lblDifficultyExplaination);
+            labelList.Add(lblHighScoreExplaination);
+            labelList.Add(lblInGame);
+            labelList.Add(lblMainMenu);
 
             // Turns off visibility
             foreach (Label lbl in labelList)
@@ -161,21 +184,36 @@ namespace ProjectZ
                 lbl.ForeColor = Color.White;
                 lbl.Font = new System.Drawing.Font("8BIT WONDER", 40F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-                lbl.MouseHover += new System.EventHandler(this.mouseHoverLabel);
-                lbl.MouseLeave += new System.EventHandler(this.mouseLeaveLabel);
             }
 
+            // Leftover labels who need to be altered
+            lblReturn.Font = new System.Drawing.Font("8BIT WONDER", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            lblInGame.Font = new System.Drawing.Font("8BIT WONDER", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            lblInGame.BackColor = Color.Transparent;
+
             // Sets the size of the labels
-            lblPlay.Size = new System.Drawing.Size(256, 62);
-            lblHighScore.Size = new System.Drawing.Size(346, 136);
-            lblHowToPlay.Size = new System.Drawing.Size(399, 140);
-            lblQuit.Size = new System.Drawing.Size(262, 65);
+            lblPlay.Size = new System.Drawing.Size(256, 60);
+            lblHighScore.Size = new System.Drawing.Size(300, 110);
+            lblHowToPlay.Size = new System.Drawing.Size(360, 110);
+            lblQuit.Size = new System.Drawing.Size(230, 60);
+            lblEasy.Size = new System.Drawing.Size(300, 60);
+            lblMedium.Size = new System.Drawing.Size(400, 60);
+            lblHard.Size = new System.Drawing.Size(300, 60);
+            lblReturn.Size = new System.Drawing.Size(200, 60);
+            lblInGame.Size = new System.Drawing.Size(400, 100);
+            lblMainMenu.Size = new System.Drawing.Size(300, 110);
 
             // Location is based on the midpoint of the label, so minus 1/2 size
             lblPlay.Location = new System.Drawing.Point(350 - (int)lblPlay.Size.Width / 2, 450 - (int)lblPlay.Size.Height / 2);
             lblHighScore.Location = new System.Drawing.Point(350 - (int)lblHighScore.Size.Width / 2, 630 - (int)lblHighScore.Size.Height / 2);
             lblHowToPlay.Location = new System.Drawing.Point(1000 - (int)lblHowToPlay.Size.Width / 2, 450 - (int)lblHowToPlay.Size.Height / 2);
-            lblQuit.Location = new System.Drawing.Point(1000 - (int)lblQuit.Size.Width / 2, 630 - (int)lblQuit.Size.Height / 2);
+            lblQuit.Location = new System.Drawing.Point(1000 - (int)lblQuit.Size.Width / 2, 620 - (int)lblQuit.Size.Height / 2);
+            lblEasy.Location = new System.Drawing.Point(300 - (int)lblEasy.Size.Width / 2, 503 - (int)lblEasy.Size.Height / 2);
+            lblMedium.Location = new System.Drawing.Point(675 - (int)lblMedium.Size.Width / 2, 503 - (int)lblMedium.Size.Height / 2);
+            lblHard.Location = new System.Drawing.Point(1050 - (int)lblHard.Size.Width / 2, 503 - (int)lblHard.Size.Height / 2);
+            lblReturn.Location = new System.Drawing.Point(10, 650);
+            lblInGame.Location = new System.Drawing.Point((Screen.PrimaryScreen.Bounds.Width/2) - (int)lblHard.Size.Width / 2, 100 - (int)lblHard.Size.Height / 2);
+            lblMainMenu.Location = new System.Drawing.Point(450 - (int)lblHighScore.Size.Width / 2, 630 - (int)lblHighScore.Size.Height / 2);
 
             // Textures of the buttons
             lblHowToPlay.Text = "how to play";
@@ -185,6 +223,8 @@ namespace ProjectZ
             lblEasy.Text = "easy";
             lblMedium.Text = "medium";
             lblHard.Text = "hard";
+            lblReturn.Text = "back";
+            lblMainMenu.Text = "main menu";
             lblDifficultyExplaination.Text = diffExplain;
             lblHighScoreExplaination.Text = highScoreExplain;
 
@@ -197,8 +237,8 @@ namespace ProjectZ
             lblEasy.Click += new System.EventHandler(this.easyClick);
             lblMedium.Click += new System.EventHandler(this.mediumClick);
             lblHard.Click += new System.EventHandler(this.hardClick);
+            lblMainMenu.Click += new System.EventHandler(this.returnToMainMenu);
             Console.WriteLine("ini buttons end");
-
         }
 
         private void InitializeCanvas()
@@ -225,28 +265,28 @@ namespace ProjectZ
         {
             Console.WriteLine("ini timer main menu");
             mainMenuTimer.Interval = Convert.ToInt32(introSpeed);
-            mainMenuTimer.Enabled = true;
+            mainMenuTimer.Start();
         }
 
         private void startThirdIntro()
         {
             Console.WriteLine("ini third intro");
             thirdIntroTimer.Interval = Convert.ToInt32(introSpeed);
-            thirdIntroTimer.Enabled = true;
+            thirdIntroTimer.Start();
         }
 
         private void startSecondIntro()
         {
             Console.WriteLine("ini second intro");
             secondIntroTimer.Interval = Convert.ToInt32(introSpeed);
-            secondIntroTimer.Enabled = true;
+            secondIntroTimer.Start();
         }
 
         private void startFirstIntro()
         {
             Console.WriteLine("ini first intro");
             firstIntroTimer.Interval = Convert.ToInt32(introSpeed);
-            firstIntroTimer.Enabled = true;
+            firstIntroTimer.Start();
         }
 
         private void firstIntroTick(object sender, EventArgs e)
@@ -262,9 +302,9 @@ namespace ProjectZ
             }
             else
             {
-                firstIntroTimer.Enabled = false;
+                firstIntroTimer.Stop();
                 startSecondIntro();
-                firstIntroTimer.Dispose();
+                pBoxGame.Image.Dispose();
             }
         }
 
@@ -282,9 +322,9 @@ namespace ProjectZ
             }
             else
             {
-                secondIntroTimer.Enabled = false;
+                secondIntroTimer.Stop();
                 startThirdIntro();
-                secondIntroTimer.Dispose();
+                pBoxGame.Image.Dispose();
             }
         }
 
@@ -302,9 +342,9 @@ namespace ProjectZ
             }
             else
             {
-                thirdIntroTimer.Enabled = false;
+                thirdIntroTimer.Stop();
                 startMainMenu();
-                thirdIntroTimer.Dispose();
+                pBoxGame.Image.Dispose();
             }
         }
 
@@ -317,15 +357,19 @@ namespace ProjectZ
             }
             else
             {
-                mainMenuTimer.Enabled = false;
+                mainMenuTimer.Stop();
                 Console.WriteLine("ini main menu");
-                status = STATUSMAINMENU;
-                mainMenuTimer.Dispose();
+                startMenu();
             }
         }
 
         // --------------------- The Intro Sequence End Here --------------------------------------------------------------
 
+        private void startMenu()
+        {
+            status = STATUSMAINMENU;
+            pBoxGame.Image = Textures.getTexture("mainMenuBackground");
+        }
         private void menuCheckTick(object sender, EventArgs e)
         {
             switch (status)
@@ -353,12 +397,34 @@ namespace ProjectZ
                     lblMedium.Visible = true;
                     lblHard.Visible = true;
                     lblDifficultyExplaination.Visible = true;
+                    lblReturn.Visible = true;
                     break;
 
                 case STATUSHIGHSCORE:
                     clearLabels();
                     lblReturn.Visible = true;
                     lblHighScoreExplaination.Visible = true;
+                    break;
+
+                case STATUSEND:
+                    clearLabels();
+                    lblQuit.Visible = true;
+                    lblMainMenu.Visible = true;
+                    break;
+
+                case STATUSPAUSE:
+                    clearLabels();
+                    lblQuit.Visible = true;
+                    lblMainMenu.Visible = true;
+                    break;
+
+                case STATUSMAINGAME:
+                    clearLabels();
+                    if (lblInGameShow)
+                    {
+                        lblInGame.Visible = true;
+                    }
+                    menuCheckTimer.Stop();
                     break;
 
                 default:
@@ -379,12 +445,10 @@ namespace ProjectZ
         {
             try
             {
-                Console.WriteLine("DE GAME IS AL BEGONNEN");
                 visibleObjects = new ArrayList();
                 EdgeKeeper.emptyEdges();
 
-                // Add ball to visibleobjectlist
-                visibleObjects.Add(ball);
+                
                 visibleObjects.Add(playingField);
 
                 // Add edges of playingfield to keeper
@@ -398,10 +462,7 @@ namespace ProjectZ
                     streamImage = webcam.getStreamImage();
 
                     pBoxGame.Image = drawArea;
-
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-
+                    
                     if (streamImage != null)
                     {
                         ArrayList cornerPoints = blobExtractor.extractBlob(filter.applyFilter(streamImage));
@@ -410,10 +471,17 @@ namespace ProjectZ
                             analyseImage(cornerPoints);
                         }
                     }
-                    stopwatch.Stop();
 
-                    // BALLETJE BEWEGEN
-                    ball.move();
+                    // Add ball to visibleobjectlist and moves it when ball is in game
+                    if (ballInGame)
+                    {
+                        visibleObjects.Add(ball);
+                        if (!ball.move())
+                        {
+                            sideEdgeCountered();
+                        }
+                    }
+
                     // TEKENEN
                     if (visibleObjects.Count > 0)
                     {
@@ -429,6 +497,23 @@ namespace ProjectZ
             {
                 Console.WriteLine(h.StackTrace);
             }
+        }
+
+        private void sideEdgeCountered()
+        {
+            status = STATUSEND;
+            menuCheckTimer.Start();
+            // Links is player 1, rood
+            if (ball.get2DPos().X < 500)
+            {
+                pBoxGame.Image = Textures.getTexture("blueWin");
+            }
+            // Rechts is player 2, blauw
+            else
+            {
+                pBoxGame.Image = Textures.getTexture("redWin");
+            }
+            
         }
 
         private void analyseImage(ArrayList cornerPoints)
@@ -508,15 +593,87 @@ namespace ProjectZ
 
         private void startGame()
         {
-            Console.WriteLine("startgame");
-            webcam.setVideoSource(videoDevices[2].MonikerString);
+            status = STATUSMAINGAME;
+            turnOnCam();
+            StartInGameComponents();            
+        }
+
+        private void turnOnCam()
+        {
             if (!webcam.isRunning() && webcam.hasVideoSource())
             {
-                Console.WriteLine("game is ook echt gestart");
                 webcam.turnOn();
-                videoStreamTimer.Enabled = true;
+                videoStreamTimer.Start();
             }
         }
+
+        private void StartInGameComponents()
+        {
+            gameCounter = 0;
+            if (random.Next(1, 2) <= 1.5)
+            {
+                coinFlip = PLAYER1COINFLIP;
+            }
+            else
+            {
+                coinFlip = PLAYER2COINFLIP;
+            }
+            lblInGameShow = true;
+            GameTimer.Start();
+        }
+
+        private void GameTimer_Tick(object sender, EventArgs e)
+        {
+            switch (gameCounter)
+            {
+                case 0:
+                    lblInGame.Text = "Flipping a coin";
+                    break;
+
+                case 30:
+                    if (coinFlip == PLAYER1COINFLIP)
+                    {
+                        lblInGame.Text = "Player 1 won the coinflip";
+                    }
+                    else
+                    {
+                        lblInGame.Text = "Player 2 won the coinflip";
+                    }
+                    break;
+
+                case 40:
+                    lblInGame.Text = "Ready?";
+                    if (coinFlip == PLAYER1COINFLIP)
+                    {
+                        ball = new Ball(PointConverter.get3DPoint(new IntPoint(500, 500)), 0);
+                    }
+                    else
+                    {
+                        ball = new Ball(PointConverter.get3DPoint(new IntPoint(500, 500)), Math.PI);
+                    }
+                    break;
+
+                case 50:
+                    lblInGame.Text = "Set";
+                    break;
+
+                case 60:
+                    lblInGame.Text = "GO!";
+                    break;
+
+                case 70:
+                    ballInGame = true;
+                    lblInGameShow = false;
+                    GameTimer.Stop();
+                    break;
+
+                default:
+                    break;
+            }
+            gameCounter += 1;
+        }
+
+
     }
 }
 

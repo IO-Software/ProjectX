@@ -5,85 +5,94 @@ using System.Text;
 using System.Threading.Tasks;
 
 using AForge;
+using System.Collections.Generic;
+using System.IO;
 
 namespace ProjectZ
 {
     class PointConverter
     {
-        private static ArrayList array3D = new ArrayList();
-        private static ArrayList array2D = new ArrayList();
+        private static IntPoint[,] arrayTo3D = new IntPoint[1000 + 20, 1000];
+        private static IntPoint[,] arrayTo2D = new IntPoint[640 + 20, 480];
 
         public PointConverter()
         {
-            initialize2DArray();
-            initialize3DArray();
+            initializeTo3DArray();
+            initializeTo2DArray();
         }
 
-        private void initialize2DArray()
+        private void initializeTo3DArray()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int x = 0; x < 1000; x++)
             {
-                ArrayList array3DLine = new ArrayList();
-
-                for (int j = 0; j < 1000; j++)
+                for (int y = 0; y < 1000; y++)
                 {
-                    IntPoint point = new IntPoint(i, j);
-                    IntPoint convertedPoint = convertTo3D(point);
-                    array3DLine.Add(convertedPoint);
+                    arrayTo3D[x,y] = convertTo3D(new IntPoint(x, y));
                 }
-                array3D.Add(array3DLine);
-                
             }
         }
 
-        private void initialize3DArray()
+        private void initializeTo2DArray()
         {
-            for (int i = 0; i < 640; i++)
+            for (int x = 0; x < 640; x++)
             {
-                ArrayList array2DLine = new ArrayList();
-                for (int j = 0; j < 480; j++)
+                for (int y = 0; y < 480; y++)
                 {
-                    IntPoint point = new IntPoint(i, j);
-                    IntPoint convertedPoint = convertTo2D(point);
-                    array2DLine.Add(convertedPoint);
+                    IntPoint point = new IntPoint(x, y);
+                    arrayTo2D[x,y] = convertTo2D(point);
                 }
-                array2D.Add(array2DLine);
             }
         }
 
-        private IntPoint convertTo2D(IntPoint punt)
+        private IntPoint convertTo2D(IntPoint point3D)
         {
-            IntPoint point3D = punt;
             IntPoint point2D = new IntPoint(0, 0);
 
             point2D.X = Convert.ToInt32(((point3D.X) - 320) * ((0.00000134 * Math.Pow(point3D.Y, 2)) - 0.0022568 * point3D.Y + 1.781) + 320 + 180);
             point2D.Y = Convert.ToInt32(point3D.Y + (0.000003 * Math.Pow(point3D.Y, 3.00)) - (0.0043 * Math.Pow(point3D.Y, 2.00)) + (2.0908 * point3D.Y) - 176.2 + 180);
-
             return point2D;
         }
 
-        private IntPoint convertTo3D(IntPoint punt)
+        private IntPoint convertTo3D(IntPoint point2D)
         {
-            IntPoint point2D = new IntPoint(punt.X - 180, punt.Y - 180);
             IntPoint point3D = new IntPoint(0, 0);
 
-            point3D.Y = Convert.ToInt32(0.1111111111e1 * Math.Pow(-0.78505640e8 + 0.121500e6 * point2D.Y + 0.36e2 * Math.Sqrt(0.11390625e8 * point2D.Y * point2D.Y - 0.1471980750e11 * point2D.Y + 0.5381613239e13), 0.1e1 / 0.3e1) - 0.1036355556e6 * Math.Pow(-0.78505640e8 + 0.121500e6 * point2D.Y + 0.36e2 * Math.Sqrt(0.11390625e8 * point2D.Y * point2D.Y - 0.1471980750e11 * point2D.Y + 0.5381613239e13), -0.1e1 / 0.3e1) + 0.4777777778e3);
-            point3D.X = Convert.ToInt32(((point2D.X - 320) / ((0.00000134 * Math.Pow(point3D.Y, 2)) - 0.0022568 * point3D.Y + 1.781)) + 320);
+            point3D.Y = Convert.ToInt32(0.1111111111e1 * Math.Pow(-0.78505640e8 + 0.121500e6 * (point2D.Y - 180) + 0.36e2 * Math.Sqrt(0.11390625e8 * (point2D.Y - 180) * (point2D.Y - 180) - 0.1471980750e11 * (point2D.Y - 180) + 0.5381613239e13), 0.1e1 / 0.3e1) - 0.1036355556e6 *
+                Math.Pow(-0.78505640e8 + 0.121500e6 * (point2D.Y - 180) + 0.36e2 * Math.Sqrt(0.11390625e8 * (point2D.Y - 180) * (point2D.Y - 180) - 0.1471980750e11 * (point2D.Y - 180) + 0.5381613239e13), -0.1e1 / 0.3e1) + 0.4777777778e3);
+            //Console.WriteLine("POINT2D.X = " + point2D.X);
+            //Console.WriteLine("POINT3D.Y = " + point3D.Y);
+
+            //LET OP: de factor 1.26 aan het eind vd formule is een make-shift fix. Mathematisch probleem onbekend.
+            point3D.X = Convert.ToInt32((((point2D.X - 320 - 180) / ((0.00000134 * Math.Pow((point3D.Y - 180), 2)) - 0.0022568 * (point3D.Y - 180) + 1.781))*1.26) + 320);
             return point3D;
         }
 
         public static IntPoint get3DPoint(IntPoint point)
         {
-            ArrayList from3Dto2Dline = (ArrayList)array2D[point.X];
-            IntPoint newPoint = (IntPoint)from3Dto2Dline[point.Y];
-            return newPoint;
+            try
+            {
+                return arrayTo3D[point.X, point.Y];
+            }
+            catch
+            {
+                Console.WriteLine("3D punten hebben problemen");
+                Console.WriteLine("get3Dpoint: " + point.X + ";" + point.Y);
+            }
+            return new IntPoint(320, 240);
         }
 
         public static IntPoint get2DPoint(IntPoint point)
         {
-            ArrayList from2Dto3DLine = (ArrayList)array3D[point.X];
-            IntPoint newPoint = (IntPoint)from2Dto3DLine[point.Y];
-            return newPoint;
+            try
+            {
+                return arrayTo2D[point.X, point.Y];
+            }
+            catch
+            {
+                Console.WriteLine("get2Dpoint: " + point.X + ";" + point.Y);
+                Console.WriteLine("2D punten hebben problemen");
+            }
+            return new IntPoint(500, 500);
         }
     }
 }

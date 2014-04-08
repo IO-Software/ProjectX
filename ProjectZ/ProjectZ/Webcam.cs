@@ -21,6 +21,9 @@ namespace ProjectZ
         private VideoCaptureDevice videoSource;
         private Bitmap stream;
 
+        private int streamWidth;
+        private int streamHeight;
+
         public Webcam() 
         {
             videoSource = new VideoCaptureDevice();
@@ -60,6 +63,9 @@ namespace ProjectZ
         private void videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             stream = new Bitmap((Bitmap)eventArgs.Frame.Clone());
+            streamWidth = stream.Width;
+            streamHeight = stream.Height;
+            stream.RotateFlip(RotateFlipType.RotateNoneFlipX);
         }
 
         public Bitmap getStreamImage()
@@ -69,18 +75,18 @@ namespace ProjectZ
 
         public int getHeight()
         {
-            if (stream != null)
+            if (streamHeight > 0)
             {
-                return stream.Height;
+                return streamHeight;
             }
             return 0;
         }
 
         public int getWidth()
         {
-            if (stream != null)
+            if (streamWidth > 0)
             {
-                return stream.Width;
+                return streamWidth;
             }
             return 0;
         }

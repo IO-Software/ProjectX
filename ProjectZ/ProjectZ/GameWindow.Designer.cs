@@ -48,8 +48,10 @@ namespace ProjectZ
             this.lblHard = new System.Windows.Forms.Label();
             this.lblDifficultyExplaination = new System.Windows.Forms.Label();
             this.lblHighScoreExplaination = new System.Windows.Forms.Label();
-            this.cboxWebcams = new System.Windows.Forms.ComboBox();
             this.videoStreamTimer = new System.Windows.Forms.Timer(this.components);
+            this.GameTimer = new System.Windows.Forms.Timer(this.components);
+            this.lblInGame = new System.Windows.Forms.Label();
+            this.lblMainMenu = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pBoxGame)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,7 +82,7 @@ namespace ProjectZ
             // 
             // menuCheckTimer
             // 
-            this.menuCheckTimer.Interval = 1;
+            this.menuCheckTimer.Interval = 10;
             this.menuCheckTimer.Tick += new System.EventHandler(this.menuCheckTick);
             // 
             // lblPlay
@@ -173,19 +175,32 @@ namespace ProjectZ
             this.lblHighScoreExplaination.TabIndex = 15;
             this.lblHighScoreExplaination.Text = "lblHighScoreExplaination";
             // 
-            // cboxWebcams
-            // 
-            this.cboxWebcams.FormattingEnabled = true;
-            this.cboxWebcams.Location = new System.Drawing.Point(300, 167);
-            this.cboxWebcams.Name = "cboxWebcams";
-            this.cboxWebcams.Size = new System.Drawing.Size(121, 21);
-            this.cboxWebcams.TabIndex = 16;
-            this.cboxWebcams.Visible = false;
-            // 
             // videoStreamTimer
             // 
-            this.videoStreamTimer.Interval = 20;
+            this.videoStreamTimer.Interval = 1;
             this.videoStreamTimer.Tick += new System.EventHandler(this.videoStreamTimer_Tick);
+            // 
+            // GameTimer
+            // 
+            this.GameTimer.Tick += new System.EventHandler(this.GameTimer_Tick);
+            // 
+            // lblInGame
+            // 
+            this.lblInGame.AutoSize = true;
+            this.lblInGame.Location = new System.Drawing.Point(440, 141);
+            this.lblInGame.Name = "lblInGame";
+            this.lblInGame.Size = new System.Drawing.Size(54, 13);
+            this.lblInGame.TabIndex = 16;
+            this.lblInGame.Text = "lblInGame";
+            // 
+            // lblMainMenu
+            // 
+            this.lblMainMenu.AutoSize = true;
+            this.lblMainMenu.Location = new System.Drawing.Point(219, 169);
+            this.lblMainMenu.Name = "lblMainMenu";
+            this.lblMainMenu.Size = new System.Drawing.Size(67, 13);
+            this.lblMainMenu.TabIndex = 17;
+            this.lblMainMenu.Text = "lblMainMenu";
             // 
             // GameWindow
             // 
@@ -193,7 +208,8 @@ namespace ProjectZ
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(577, 412);
-            this.Controls.Add(this.cboxWebcams);
+            this.Controls.Add(this.lblMainMenu);
+            this.Controls.Add(this.lblInGame);
             this.Controls.Add(this.lblHighScoreExplaination);
             this.Controls.Add(this.lblDifficultyExplaination);
             this.Controls.Add(this.lblHard);
@@ -217,27 +233,38 @@ namespace ProjectZ
         }
 
         // ---------------- EVENT HANDLERS ---------------------------------------------------------------------------------
-        private void mouseHoverLabel(object sender, System.EventArgs e)
-        {
-            Console.WriteLine("BLUE BLUE BLUE");
-            Label lbl = (Label)sender;
-            lbl.ForeColor = System.Drawing.Color.Blue;
-        }
-
-        private void mouseLeaveLabel(object sender, System.EventArgs e)
-        {
-            Label lbl = (Label)sender;
-            lbl.ForeColor = System.Drawing.Color.White;
-        }
-
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
-                firstIntroTimer.Enabled = false;
-                secondIntroTimer.Enabled = false;
-                thirdIntroTimer.Enabled = false;
-                mainMenuTimer.Enabled = true;
+                if (status == STATUSINTRO)
+                {
+                    firstIntroTimer.Enabled = false;
+                    secondIntroTimer.Enabled = false;
+                    thirdIntroTimer.Enabled = false;
+                    mainMenuTimer.Enabled = true;
+                }
+                else if (status == STATUSHIGHSCORE || status == STATUSHOWTOPLAY || status == STATUSSELECTDIFFICULTY)
+                {
+                    status = STATUSMAINMENU;
+                }
+                else if (status == STATUSMAINGAME)
+                {
+                    status = STATUSPAUSE;
+                    ball.pauseBall();
+                    videoStreamTimer.Stop();
+                    GameTimer.Stop();
+                    menuCheckTimer.Start();
+                    pBoxGame.Image = ChangeOpacity.change(webcam.getStreamImage(), (float)0.5);
+                }
+                else if (status == STATUSPAUSE)
+                {
+                    status = STATUSMAINGAME;
+                    ball.resumeBall();
+                    videoStreamTimer.Start();
+                    GameTimer.Start();
+                    menuCheckTimer.Stop();
+                }
             }
         }
 
@@ -251,6 +278,7 @@ namespace ProjectZ
 
         private void leaveGame(object sender, EventArgs e)
         {
+            Console.WriteLine("Application Exit");
             Application.Exit();
         }
 
@@ -300,6 +328,13 @@ namespace ProjectZ
             startGame();
         }
 
+        private void returnToMainMenu(object sender, EventArgs e)
+        {
+            GameTimer.Stop();
+            videoStreamTimer.Stop();
+            startMenu();
+        }
+
         #endregion
 
         private System.Windows.Forms.PictureBox pBoxGame;
@@ -308,17 +343,19 @@ namespace ProjectZ
         private System.Windows.Forms.Timer thirdIntroTimer;
         private System.Windows.Forms.Timer mainMenuTimer;
         private System.Windows.Forms.Timer menuCheckTimer;
-        private Label lblPlay;
-        private Label lblHowToPlay;
-        private Label lblHighScore;
-        private Label lblQuit;
-        private Label lblReturn;
-        private Label lblEasy;
-        private Label lblMedium;
-        private Label lblHard;
-        private Label lblDifficultyExplaination;
-        private Label lblHighScoreExplaination;
-        private ComboBox cboxWebcams;
-        private Timer videoStreamTimer;
+        private System.Windows.Forms.Label lblPlay;
+        private System.Windows.Forms.Label lblHowToPlay;
+        private System.Windows.Forms.Label lblHighScore;
+        private System.Windows.Forms.Label lblQuit;
+        private System.Windows.Forms.Label lblReturn;
+        private System.Windows.Forms.Label lblEasy;
+        private System.Windows.Forms.Label lblMedium;
+        private System.Windows.Forms.Label lblHard;
+        private System.Windows.Forms.Label lblDifficultyExplaination;
+        private System.Windows.Forms.Label lblHighScoreExplaination;
+        private System.Windows.Forms.Timer videoStreamTimer;
+        private System.Windows.Forms.Timer GameTimer;
+        private System.Windows.Forms.Label lblInGame;
+        private System.Windows.Forms.Label lblMainMenu;
     }
 }

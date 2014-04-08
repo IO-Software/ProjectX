@@ -43,6 +43,7 @@ namespace ProjectZ
         private const int CANNONPLAYER2 = 6;
 
 
+
         public Window()
         {
             InitializeComponent();
@@ -139,34 +140,34 @@ namespace ProjectZ
                     drawArea = new Bitmap(webcam.getStreamImage(), widthCheck, heightCheck);
                     streamImage = webcam.getStreamImage();
 
-                    pboxStream.Image = drawArea;
-                    pboxTest.Image = streamImage;
-                    pboxTest2.Image = filter.applyFilter(streamImage);
+                    //pboxStream.Image = drawArea;
+                    //pboxTest.Image = streamImage;
+                    //pboxTest2.Image = filter.applyFilter(streamImage);
 
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
+                    //Stopwatch stopwatch = new Stopwatch();
+                    //stopwatch.Start();
 
-                    if (streamImage != null)
-                    {
-                        ArrayList cornerPoints = blobExtractor.extractBlob(filter.applyFilter(streamImage));
-                        if (cornerPoints.Count > 0)
-                        {
-                            analyseImage(cornerPoints);
-                        }
-                    }
-                    stopwatch.Stop();
-                    lblElapsedTime.Text = "Elapsed Time: " + stopwatch.ElapsedMilliseconds;
+                    //if (streamImage != null)
+                    //{
+                    //    ArrayList cornerPoints = blobExtractor.extractBlob(filter.applyFilter(streamImage));
+                    //    if (cornerPoints.Count > 0)
+                    //    {
+                    //        analyseImage(cornerPoints);
+                    //    }
+                    //}
+                    //stopwatch.Stop();
+                    //lblElapsedTime.Text = "Elapsed Time: " + stopwatch.ElapsedMilliseconds;
 
-                    // BALLETJE BEWEGEN
-                    ball.move();
-                    // TEKENEN
-                    if (visibleObjects.Count > 0)
-                    {
-                        foreach (VisibleObject visObj in visibleObjects)
-                        {
-                            drawArea = visObj.draw(drawArea);
-                        }
-                    }
+                    //// BALLETJE BEWEGEN
+                    //ball.move();
+                    //// TEKENEN
+                    //if (visibleObjects.Count > 0)
+                    //{
+                    //    foreach (VisibleObject visObj in visibleObjects)
+                    //    {
+                    //        drawArea = visObj.draw(drawArea);
+                    //    }
+                    //}
                 }
                 
             }
@@ -255,8 +256,19 @@ namespace ProjectZ
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            
+            //Console.WriteLine("Punt2D (243,252) naar 3D: " + PointConverter.get3DPoint(new IntPoint(243, 252)));
+            //Console.WriteLine("Punt3D (191, 91) naar 2D: " + PointConverter.get2DPoint(new IntPoint(191, 91)));
+            //Console.WriteLine("Punt2D (243, 252) converTo3DMethod: " + PointConverter.convertTo3D(new IntPoint(243, 252)));
+            //Console.WriteLine("Punt3D (158, 91) naar 2D: " + PointConverter.convertTo2D(new IntPoint(158, 91)));
+            //Console.WriteLine("");
+            //Console.WriteLine("Punt2D (358, 352) naar 3D: " + PointConverter.get3DPoint(new IntPoint(358, 352)));
+            //Console.WriteLine("Punt3D (225, 136) naar 2D: " + PointConverter.get2DPoint(new IntPoint(225, 136)));
+            //Console.WriteLine("");
+            //Console.WriteLine("Punt2D (813, 705) naar 3D: " + PointConverter.get3DPoint(new IntPoint(813, 705)));
+            //Console.WriteLine("Punt3D (596, 365) naar 2D: " + PointConverter.get2DPoint(new IntPoint(596, 365)));
+            pboxStream.Image = webcam.getStreamImage();
+            pboxTest.Image = filter.applyFilter(webcam.getStreamImage());
+            pboxTest2.Image = filter.applyGrayFilter(webcam.getStreamImage());
         }
-
     }
 }

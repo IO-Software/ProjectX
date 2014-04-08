@@ -26,10 +26,12 @@ namespace ProjectZ
             assembly = Assembly.GetExecutingAssembly();
 
             defaultTexture = loadTexture("default");
-            addTextureToList(loadTexture("mainMenuBackground"), "mainMenuBackground");
+            addTextureToList(loadTexture("menuBackground"), "mainMenuBackground");
             addTextureToList(loadTexture("firstIntroScreen"), "firstIntroScreen");
             addTextureToList(loadTexture("secondIntroScreen"), "secondIntroScreen");
             addTextureToList(loadTexture("thirdIntroScreen"), "thirdIntroScreen");
+            addTextureToList(loadTexture("blueWin"), "blueWin");
+            addTextureToList(loadTexture("redWin"), "redWin");
         }
 
         private Bitmap loadTexture(String fileName) 

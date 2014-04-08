@@ -132,15 +132,19 @@
     <EmbeddedResource Include="QRCodes\wall.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Textures\mainMenuBackground.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Textures\default.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Textures\firstIntroScreen.png" />
     <EmbeddedResource Include="Textures\secondIntroScreen.png" />
     <EmbeddedResource Include="Textures\thirdIntroScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Textures\menuBackground.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Textures\blueWin.png" />
+    <EmbeddedResource Include="Textures\redWin.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

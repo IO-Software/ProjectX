@@ -52,7 +52,6 @@ namespace ProjectZ
                     }
                 }
             }
-            Console.WriteLine("Geen code herkend");
             return -1;
         }
 

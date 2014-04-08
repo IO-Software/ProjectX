@@ -42,6 +42,7 @@
             this.lblAmountVisObjCheck = new System.Windows.Forms.Label();
             this.btnTest = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pboxStream)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxTest)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pboxTest2)).BeginInit();
@@ -88,7 +89,7 @@
             // 
             this.pboxTest.Location = new System.Drawing.Point(701, 12);
             this.pboxTest.Name = "pboxTest";
-            this.pboxTest.Size = new System.Drawing.Size(248, 237);
+            this.pboxTest.Size = new System.Drawing.Size(525, 306);
             this.pboxTest.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pboxTest.TabIndex = 5;
             this.pboxTest.TabStop = false;
@@ -100,9 +101,9 @@
             // 
             // pboxTest2
             // 
-            this.pboxTest2.Location = new System.Drawing.Point(701, 255);
+            this.pboxTest2.Location = new System.Drawing.Point(701, 324);
             this.pboxTest2.Name = "pboxTest2";
-            this.pboxTest2.Size = new System.Drawing.Size(248, 207);
+            this.pboxTest2.Size = new System.Drawing.Size(525, 364);
             this.pboxTest2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pboxTest2.TabIndex = 6;
             this.pboxTest2.TabStop = false;
@@ -166,7 +167,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1091, 542);
+            this.ClientSize = new System.Drawing.Size(1298, 750);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.lblAmountVisObjCheck);
@@ -205,6 +206,7 @@
         private System.Windows.Forms.Label lblAmountVisObjCheck;
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

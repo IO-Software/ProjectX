@@ -14,13 +14,16 @@ namespace ProjectZ
         private IntPoint currentPos3D;
 
         private double speed = 5;
+        private double speedSaved;
         private double angle;
 
-        public Ball(IntPoint startPos, double angle)
+        private Boolean hitRightOrLeftWall = false;
+
+        public Ball(IntPoint startPos3D, double angle)
         {
             this.angle = angle;
-            currentPos3D = startPos;
-            updateCurrentPos2D(startPos);
+            currentPos3D = startPos3D;
+            updateCurrentPos2D(startPos3D);
         }
 
         private void updateCurrentPos2D(IntPoint update) 
@@ -35,15 +38,15 @@ namespace ProjectZ
 
         public Boolean detectEdge(Edge edge)
         {
+            // Dit werkt alleen maar in 2D
             IntPoint edgePosA = edge.getEdgePointA_2D();
             IntPoint edgePosB = edge.getEdgePointB_2D();
             // Punt d is een voorspelling van het punt waar punt C de volgende stap gaat zijn
-            AForge.IntPoint d = new IntPoint(Convert.ToInt32(currentPos2D.X + Math.Cos(angle) * speed), Convert.ToInt32(currentPos2D.Y + Math.Sin(angle) * speed));
+            AForge.IntPoint nextStepC = new IntPoint(Convert.ToInt32(currentPos2D.X + Math.Cos(angle) * speed), Convert.ToInt32(currentPos2D.Y + Math.Sin(angle) * speed));
 
-            float denominator = ((edgePosB.X - edgePosA.X) * (d.Y - currentPos2D.Y)) - ((edgePosB.Y - edgePosA.Y) * (d.X - currentPos2D.X));
-            float numerator1 = ((edgePosA.Y - currentPos2D.Y) * (d.X - currentPos2D.X)) - ((edgePosA.X - currentPos2D.X) * (d.Y - currentPos2D.Y));
+            float denominator = ((edgePosB.X - edgePosA.X) * (nextStepC.Y - currentPos2D.Y)) - ((edgePosB.Y - edgePosA.Y) * (nextStepC.X - currentPos2D.X));
+            float numerator1 = ((edgePosA.Y - currentPos2D.Y) * (nextStepC.X - currentPos2D.X)) - ((edgePosA.X - currentPos2D.X) * (nextStepC.Y - currentPos2D.Y));
             float numerator2 = ((edgePosA.Y - currentPos2D.Y) * (edgePosB.X - edgePosA.X)) - ((edgePosA.X - currentPos2D.X) * (edgePosB.Y - edgePosA.Y));
-
 
             if (denominator == 0)
             {
@@ -58,6 +61,7 @@ namespace ProjectZ
 
         public void bounce(Edge edge)
         {
+            // Dit is ook alleen maar in 2D
             Double dX = edge.getEdgePointA_2D().X - edge.getEdgePointB_2D().X;
             Double dY = edge.getEdgePointA_2D().Y - edge.getEdgePointB_2D().Y;
 
@@ -103,28 +107,31 @@ namespace ProjectZ
             // NOTHING WILL HAPPEN HERE
         }
 
-        public void setSpeedBall(double speed)
+        public void setSpeedBall(double newSpeed)
         {
-            this.speed = speed;
+            Console.WriteLine("Speed of ball has been set. Speed is: " + newSpeed);
+            speed = newSpeed;
+            Console.WriteLine("Speed of ball hopefully changed: " + speed);
         }
 
-        public void move()
+        public Boolean move()
         {
-            if (!intersects())
+            hitRightOrLeftWall = false;
+            intersects();
+            if (hitRightOrLeftWall)
             {
-                Console.WriteLine("Ball alleen verplaatst naar 3D: " + currentPos3D.X + ";" + currentPos3D.Y);
-                Console.WriteLine("Ball alleen verplaatst naar 2D: " + currentPos2D.X + ";" + currentPos2D.Y);
-                currentPos2D.X = Convert.ToInt32(currentPos2D.X + Math.Cos(angle) * speed);
-                currentPos2D.Y = Convert.ToInt32(currentPos2D.Y + Math.Sin(angle) * speed);
-                updateCurrentPos3D(currentPos2D);
+                return false;
             }
             else
             {
-                Console.WriteLine("Ball bounce");
+                currentPos2D.X = Convert.ToInt32(currentPos2D.X + Math.Cos(angle) * speed);
+                currentPos2D.Y = Convert.ToInt32(currentPos2D.Y + Math.Sin(angle) * speed);
+                updateCurrentPos3D(currentPos2D);
+                return true;
             }
         }
 
-        public Boolean intersects()
+        public void intersects()
         {
             Boolean intersect = false;
             foreach (Edge edge in EdgeKeeper.getEdges())
@@ -132,13 +139,39 @@ namespace ProjectZ
                 intersect = detectEdge(edge);
                 if (intersect)
                 {
-                    bounce(edge);
-                    return true;
+                    if (edge.Equals(PlayingField.getLeft()) || edge.Equals(PlayingField.getRight()))
+                    {
+                        hitRightOrLeftWall = true;
+                    }
+                    else
+                    {
+                        bounce(edge);
+                    }
                 }
             }
-            return false;
         }
-        
+
+        public void setPosition(IntPoint setPos2D)
+        {
+            currentPos2D = setPos2D;
+            currentPos3D = PointConverter.get3DPoint(setPos2D);
+        }
+
+        public void pauseBall()
+        {
+            speedSaved = speed;
+            this.speed = 0;
+        }
+
+        public void resumeBall() 
+        {
+            speed = speedSaved;
+        }
+
+        public IntPoint get2DPos()
+        {
+            return currentPos2D;
+        }
 
     }
 }
